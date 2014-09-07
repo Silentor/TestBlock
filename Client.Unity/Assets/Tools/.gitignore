@@ -1,0 +1,2 @@
+#Unignore pdb to debug tools dll from UnityVS (from Visual Studio gitignore)
+!*.pdb

@@ -1,0 +1,730 @@
+﻿<Config xmlns:a="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:b="http://schemas.datacontract.org/2004/07/System.Drawing" xmlns:d="http://schemas.datacontract.org/2004/07/Prosa.Log4View.Db" xmlns:f="http://schemas.datacontract.org/2004/07/Prosa.Log4View.Receiver.File" xmlns:l="http://schemas.datacontract.org/2004/07/Prosa.Log4View.Level" xmlns:m="http://schemas.datacontract.org/2004/07/Prosa.Log4View.Receiver.Msg" xmlns:n="http://schemas.datacontract.org/2004/07/Prosa.Log4View.Receiver.Net" xmlns:t="http://schemas.datacontract.org/2004/07/Prosa.Log4View.LoggerTree" xmlns:u="http://schemas.datacontract.org/2004/07/Prosa.Log4View.Utils" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" z:Id="1" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/Prosa.Log4View.Configuration">
+  <Id>
+    <u:Value>1</u:Value>
+  </Id>
+  <Data z:Id="2">
+    <Id>
+      <u:Value>2</u:Value>
+    </Id>
+    <Version>19</Version>
+    <_receivers z:Id="3" z:Size="1">
+      <ReceiverConfig z:Id="4" xmlns:d3p1="http://schemas.datacontract.org/2004/07/Silentor.FBRLogger.Log4ViewReceiver" i:type="d3p1:FBRReceiverConfig">
+        <Id>
+          <u:Value>16</u:Value>
+        </Id>
+        <BackColor>
+          <b:knownColor>0</b:knownColor>
+          <b:name i:nil="true" />
+          <b:state>2</b:state>
+          <b:value>4293654015</b:value>
+        </BackColor>
+        <BufferSize>500000</BufferSize>
+        <Encoding z:Id="5">windows-1251</Encoding>
+        <LevelFilter z:Id="6" i:type="LogLevelSurrogated">
+          <LevelName z:Id="7">ALL</LevelName>
+        </LevelFilter>
+        <LoggingFrameworkId z:Id="8">Log4net</LoggingFrameworkId>
+        <Name z:Id="9">FBRLogger Receiver</Name>
+        <ParserType>XML</ParserType>
+        <ReadAdjacentMessages>0</ReadAdjacentMessages>
+        <ReadFrom>0001-01-01T00:00:00</ReadFrom>
+        <ReadUntil>0001-01-01T00:00:00</ReadUntil>
+        <SourceId>0</SourceId>
+        <TimeOffset>0</TimeOffset>
+        <TimeZone z:Id="10">FLE Standard Time</TimeZone>
+        <UseFilter>false</UseFilter>
+        <Window>18</Window>
+        <d3p1:ListenPort>9998</d3p1:ListenPort>
+      </ReceiverConfig>
+    </_receivers>
+    <_sources z:Id="11" z:Size="0" />
+  </Data>
+  <Presentation z:Id="12">
+    <Id>
+      <u:Value>3</u:Value>
+    </Id>
+    <DefaultLogLevel z:Ref="6" i:nil="true" />
+    <PlaySoundLogLevel z:Id="13" i:type="LogLevelSurrogated">
+      <LevelName z:Id="14">OFF</LevelName>
+    </PlaySoundLogLevel>
+    <ShowCodeDetails>true</ShowCodeDetails>
+    <ShowMessageDetails>true</ShowMessageDetails>
+    <ShowMultiField>true</ShowMultiField>
+    <ShowOutputOnDebug>true</ShowOutputOnDebug>
+    <ShowProcessDetails>true</ShowProcessDetails>
+    <ToolTipLogLevel z:Ref="13" i:nil="true" />
+    <Version>19</Version>
+    <_charts z:Id="15" z:Size="0" />
+    <_columns z:Id="16" z:Size="30">
+      <ColumnConfig z:Id="17">
+        <Id>
+          <u:Value>145</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="18">Id</FieldName>
+        <Name z:Ref="18" i:nil="true" />
+        <Position>-1</Position>
+        <Width>45</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="19">
+        <Id>
+          <u:Value>146</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="20">OriginalTime</FieldName>
+        <Name z:Ref="20" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="21">
+        <Id>
+          <u:Value>147</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="22">Time</FieldName>
+        <Name z:Ref="22" i:nil="true" />
+        <Position>1</Position>
+        <Width>80</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="23">
+        <Id>
+          <u:Value>148</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="24">LocalTime</FieldName>
+        <Name z:Ref="24" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="25">
+        <Id>
+          <u:Value>149</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="26">UtcTime</FieldName>
+        <Name z:Ref="26" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="27">
+        <Id>
+          <u:Value>150</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="28">Date</FieldName>
+        <Name z:Ref="28" i:nil="true" />
+        <Position>-1</Position>
+        <Width>70</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="29">
+        <Id>
+          <u:Value>151</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="30">Key</FieldName>
+        <Name z:Ref="30" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="31">
+        <Id>
+          <u:Value>152</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="32">Level</FieldName>
+        <Name z:Ref="32" i:nil="true" />
+        <Position>-1</Position>
+        <Width>85</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="33">
+        <Id>
+          <u:Value>153</u:Value>
+        </Id>
+        <ClipMode>ClipMiddle</ClipMode>
+        <FieldName z:Id="34">Logger</FieldName>
+        <Name z:Ref="34" i:nil="true" />
+        <Position>2</Position>
+        <Width>206</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="35">
+        <Id>
+          <u:Value>154</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="36">Source</FieldName>
+        <Name z:Ref="36" i:nil="true" />
+        <Position>-1</Position>
+        <Width>179</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="37">
+        <Id>
+          <u:Value>155</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="38">Message</FieldName>
+        <Name z:Ref="38" i:nil="true" />
+        <Position>3</Position>
+        <Width>490</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="39">
+        <Id>
+          <u:Value>156</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="40">Thread</FieldName>
+        <Name z:Ref="40" i:nil="true" />
+        <Position>-1</Position>
+        <Width>95</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="41">
+        <Id>
+          <u:Value>157</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="42">Host</FieldName>
+        <Name z:Ref="42" i:nil="true" />
+        <Position>-1</Position>
+        <Width>90</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="43">
+        <Id>
+          <u:Value>158</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="44">Exception</FieldName>
+        <Name z:Ref="44" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="45">
+        <Id>
+          <u:Value>159</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="46">Domain</FieldName>
+        <Name z:Ref="46" i:nil="true" />
+        <Position>-1</Position>
+        <Width>90</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="47">
+        <Id>
+          <u:Value>160</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="48">Identity</FieldName>
+        <Name z:Ref="48" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="49">
+        <Id>
+          <u:Value>161</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="50">User</FieldName>
+        <Name z:Ref="50" i:nil="true" />
+        <Position>-1</Position>
+        <Width>90</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="51">
+        <Id>
+          <u:Value>162</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="52">Class</FieldName>
+        <Name z:Ref="52" i:nil="true" />
+        <Position>-1</Position>
+        <Width>90</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="53">
+        <Id>
+          <u:Value>163</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="54">Method</FieldName>
+        <Name z:Ref="54" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="55">
+        <Id>
+          <u:Value>164</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="56">File</FieldName>
+        <Name z:Ref="56" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="57">
+        <Id>
+          <u:Value>165</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="58">Line</FieldName>
+        <Name z:Ref="58" i:nil="true" />
+        <Position>-1</Position>
+        <Width>45</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="59">
+        <Id>
+          <u:Value>166</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="60">NDC</FieldName>
+        <Name z:Ref="60" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="61">
+        <Id>
+          <u:Value>167</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="62">MDC</FieldName>
+        <Name z:Ref="62" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="63">
+        <Id>
+          <u:Value>168</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="64">Comment</FieldName>
+        <Name z:Ref="64" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="65">
+        <Id>
+          <u:Value>169</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="66">StackTrace</FieldName>
+        <Name z:Ref="66" i:nil="true" />
+        <Position>5</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="67">
+        <Id>
+          <u:Value>170</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="68">ProcessId</FieldName>
+        <Name z:Ref="68" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="69">
+        <Id>
+          <u:Value>171</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="70">ThreadId</FieldName>
+        <Name z:Ref="70" i:nil="true" />
+        <Position>-1</Position>
+        <Width>120</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="71">
+        <Id>
+          <u:Value>172</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="72">LogSource</FieldName>
+        <Name z:Ref="72" i:nil="true" />
+        <Position>6</Position>
+        <Width>187</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="73">
+        <Id>
+          <u:Value>173</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="74">Log Source</FieldName>
+        <Name z:Ref="74" i:nil="true" />
+        <Position>7</Position>
+        <Width>227</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+      <ColumnConfig z:Id="75">
+        <Id>
+          <u:Value>174</u:Value>
+        </Id>
+        <ClipMode>ClipRight</ClipMode>
+        <FieldName z:Id="76">CallStack</FieldName>
+        <Name z:Ref="76" i:nil="true" />
+        <Position>4</Position>
+        <Width>279</Width>
+        <WindowId>18</WindowId>
+      </ColumnConfig>
+    </_columns>
+    <_filters z:Id="77" z:Size="0" />
+    <_formats z:Id="78" z:Size="1">
+      <FormatConfig z:Id="79">
+        <Id>
+          <u:Value>0</u:Value>
+        </Id>
+        <ConditionFieldName z:Id="80">Message</ConditionFieldName>
+        <ConditionRelation z:Id="81"></ConditionRelation>
+        <ConditionText z:Ref="81" i:nil="true" />
+        <Formats z:Id="82" z:Size="12">
+          <a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+            <a:Key z:Id="83" i:type="LogLevelSurrogated">
+              <LevelName z:Id="84">VERBOSE</LevelName>
+            </a:Key>
+            <a:Value z:Id="85">
+              <Id>
+                <u:Value>4</u:Value>
+              </Id>
+              <Backcolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>0</b:state>
+                <b:value>0</b:value>
+              </Backcolor>
+              <FontName z:Id="86">Tahoma</FontName>
+              <Forecolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>2</b:state>
+                <b:value>4290032820</b:value>
+              </Forecolor>
+              <Loglevel z:Ref="83" i:nil="true" />
+              <Size>8.25</Size>
+              <Style>Regular</Style>
+            </a:Value>
+          </a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+          <a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+            <a:Key z:Id="87" i:type="LogLevelSurrogated">
+              <LevelName z:Id="88">TRACE</LevelName>
+            </a:Key>
+            <a:Value z:Id="89">
+              <Id>
+                <u:Value>5</u:Value>
+              </Id>
+              <Backcolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>0</b:state>
+                <b:value>0</b:value>
+              </Backcolor>
+              <FontName z:Id="90">Tahoma</FontName>
+              <Forecolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>2</b:state>
+                <b:value>4288716960</b:value>
+              </Forecolor>
+              <Loglevel z:Ref="87" i:nil="true" />
+              <Size>8.25</Size>
+              <Style>Regular</Style>
+            </a:Value>
+          </a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+          <a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+            <a:Key z:Id="91" i:type="LogLevelSurrogated">
+              <LevelName z:Id="92">DEBUG</LevelName>
+            </a:Key>
+            <a:Value z:Id="93">
+              <Id>
+                <u:Value>6</u:Value>
+              </Id>
+              <Backcolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>0</b:state>
+                <b:value>0</b:value>
+              </Backcolor>
+              <FontName z:Id="94">Tahoma</FontName>
+              <Forecolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>2</b:state>
+                <b:value>4286743170</b:value>
+              </Forecolor>
+              <Loglevel z:Ref="91" i:nil="true" />
+              <Size>8.25</Size>
+              <Style>Regular</Style>
+            </a:Value>
+          </a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+          <a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+            <a:Key z:Id="95" i:type="LogLevelSurrogated">
+              <LevelName z:Id="96">INFO</LevelName>
+            </a:Key>
+            <a:Value z:Id="97">
+              <Id>
+                <u:Value>7</u:Value>
+              </Id>
+              <Backcolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>0</b:state>
+                <b:value>0</b:value>
+              </Backcolor>
+              <FontName z:Id="98">Tahoma</FontName>
+              <Forecolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>2</b:state>
+                <b:value>4278190080</b:value>
+              </Forecolor>
+              <Loglevel z:Ref="95" i:nil="true" />
+              <Size>8.25</Size>
+              <Style>Regular</Style>
+            </a:Value>
+          </a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+          <a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+            <a:Key z:Id="99" i:type="LogLevelSurrogated">
+              <LevelName z:Id="100">NOTICE</LevelName>
+            </a:Key>
+            <a:Value z:Id="101">
+              <Id>
+                <u:Value>8</u:Value>
+              </Id>
+              <Backcolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>0</b:state>
+                <b:value>0</b:value>
+              </Backcolor>
+              <FontName z:Id="102">Tahoma</FontName>
+              <Forecolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>2</b:state>
+                <b:value>4281957177</b:value>
+              </Forecolor>
+              <Loglevel z:Ref="99" i:nil="true" />
+              <Size>8.25</Size>
+              <Style>Regular</Style>
+            </a:Value>
+          </a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+          <a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+            <a:Key z:Id="103" i:type="LogLevelSurrogated">
+              <LevelName z:Id="104">WARN</LevelName>
+            </a:Key>
+            <a:Value z:Id="105">
+              <Id>
+                <u:Value>9</u:Value>
+              </Id>
+              <Backcolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>0</b:state>
+                <b:value>0</b:value>
+              </Backcolor>
+              <FontName z:Id="106">Tahoma</FontName>
+              <Forecolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>2</b:state>
+                <b:value>4294934528</b:value>
+              </Forecolor>
+              <Loglevel z:Ref="103" i:nil="true" />
+              <Size>8.25</Size>
+              <Style>Regular</Style>
+            </a:Value>
+          </a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+          <a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+            <a:Key z:Id="107" i:type="LogLevelSurrogated">
+              <LevelName z:Id="108">ERROR</LevelName>
+            </a:Key>
+            <a:Value z:Id="109">
+              <Id>
+                <u:Value>10</u:Value>
+              </Id>
+              <Backcolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>0</b:state>
+                <b:value>0</b:value>
+              </Backcolor>
+              <FontName z:Id="110">Tahoma</FontName>
+              <Forecolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>2</b:state>
+                <b:value>4294901760</b:value>
+              </Forecolor>
+              <Loglevel z:Ref="107" i:nil="true" />
+              <Size>8.25</Size>
+              <Style>Regular</Style>
+            </a:Value>
+          </a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+          <a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+            <a:Key z:Id="111" i:type="LogLevelSurrogated">
+              <LevelName z:Id="112">SEVERE</LevelName>
+            </a:Key>
+            <a:Value z:Id="113">
+              <Id>
+                <u:Value>11</u:Value>
+              </Id>
+              <Backcolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>0</b:state>
+                <b:value>0</b:value>
+              </Backcolor>
+              <FontName z:Id="114">Tahoma</FontName>
+              <Forecolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>2</b:state>
+                <b:value>4293067295</b:value>
+              </Forecolor>
+              <Loglevel z:Ref="111" i:nil="true" />
+              <Size>8.25</Size>
+              <Style>Regular</Style>
+            </a:Value>
+          </a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+          <a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+            <a:Key z:Id="115" i:type="LogLevelSurrogated">
+              <LevelName z:Id="116">CRITICAL</LevelName>
+            </a:Key>
+            <a:Value z:Id="117">
+              <Id>
+                <u:Value>12</u:Value>
+              </Id>
+              <Backcolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>0</b:state>
+                <b:value>0</b:value>
+              </Backcolor>
+              <FontName z:Id="118">Tahoma</FontName>
+              <Forecolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>2</b:state>
+                <b:value>4289400377</b:value>
+              </Forecolor>
+              <Loglevel z:Ref="115" i:nil="true" />
+              <Size>8.25</Size>
+              <Style>Regular</Style>
+            </a:Value>
+          </a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+          <a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+            <a:Key z:Id="119" i:type="LogLevelSurrogated">
+              <LevelName z:Id="120">ALERT</LevelName>
+            </a:Key>
+            <a:Value z:Id="121">
+              <Id>
+                <u:Value>13</u:Value>
+              </Id>
+              <Backcolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>0</b:state>
+                <b:value>0</b:value>
+              </Backcolor>
+              <FontName z:Id="122">Tahoma</FontName>
+              <Forecolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>2</b:state>
+                <b:value>4294902015</b:value>
+              </Forecolor>
+              <Loglevel z:Ref="119" i:nil="true" />
+              <Size>8.25</Size>
+              <Style>Regular</Style>
+            </a:Value>
+          </a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+          <a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+            <a:Key z:Id="123" i:type="LogLevelSurrogated">
+              <LevelName z:Id="124">FATAL</LevelName>
+            </a:Key>
+            <a:Value z:Id="125">
+              <Id>
+                <u:Value>14</u:Value>
+              </Id>
+              <Backcolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>0</b:state>
+                <b:value>0</b:value>
+              </Backcolor>
+              <FontName z:Id="126">Tahoma</FontName>
+              <Forecolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>2</b:state>
+                <b:value>4287309977</b:value>
+              </Forecolor>
+              <Loglevel z:Ref="123" i:nil="true" />
+              <Size>8.25</Size>
+              <Style>Regular</Style>
+            </a:Value>
+          </a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+          <a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+            <a:Key z:Id="127" i:type="LogLevelSurrogated">
+              <LevelName z:Id="128">EMERGENCY</LevelName>
+            </a:Key>
+            <a:Value z:Id="129">
+              <Id>
+                <u:Value>15</u:Value>
+              </Id>
+              <Backcolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>0</b:state>
+                <b:value>0</b:value>
+              </Backcolor>
+              <FontName z:Id="130">Tahoma</FontName>
+              <Forecolor>
+                <b:knownColor>0</b:knownColor>
+                <b:name i:nil="true" />
+                <b:state>2</b:state>
+                <b:value>4285932413</b:value>
+              </Forecolor>
+              <Loglevel z:Ref="127" i:nil="true" />
+              <Size>8.25</Size>
+              <Style>Regular</Style>
+            </a:Value>
+          </a:KeyValueOfLogLevelLoggerFormatConfigxIppDzWS>
+        </Formats>
+        <IgnoreCase>false</IgnoreCase>
+        <Name z:Id="131">Default Format Settings</Name>
+      </FormatConfig>
+    </_formats>
+    <_logLevels z:Id="132" z:Size="0" />
+    <_loggers z:Id="133" z:Size="1">
+      <LoggerConfig z:Id="134">
+        <Id>
+          <u:Value>144</u:Value>
+        </Id>
+        <LogLevel z:Ref="6" i:nil="true" />
+        <LoggerPath z:Ref="81" i:nil="true" />
+        <ReceiverId>16</ReceiverId>
+      </LoggerConfig>
+    </_loggers>
+  </Presentation>
+  <Version>19</Version>
+</Config>

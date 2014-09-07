@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FBRLogger</name>
+    </assembly>
+    <members>
+        <member name="T:Silentor.FBRLogger.LogMessageReceiver">
+            <summary>
+            Receives FBR log messages by UDP
+            </summary>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessageReceiver.#ctor(System.Int32)">
+            <summary>
+            Create receiver with listen port
+            </summary>
+            <param name="port"></param>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessageReceiver.Start">
+            <summary>
+            Start receiving messages
+            </summary>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessageReceiver.Dispose">
+            <summary>
+            Stop receiving data and dispose receiver
+            </summary>
+        </member>
+        <member name="E:Silentor.FBRLogger.LogMessageReceiver.MessageReceived">
+            <summary>
+            Fires when received message
+            </summary>
+        </member>
+        <member name="T:Silentor.FBRLogger.LogMessage">
+            <summary>
+            Log message (FBR format)
+            </summary>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessage.#ctor(System.String,System.String,Silentor.FBRLogger.LogMessage.LogLevel,System.Boolean,System.Exception)">
+            <summary>
+            Preferred constructor for manual log message creation
+            </summary>
+            <param name="logger"></param>
+            <param name="message"></param>
+            <param name="level"></param>
+            <param name="includeStack"></param>
+            <param name="exception"></param>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessage.#ctor(System.UInt32,System.String,System.String,Silentor.FBRLogger.LogMessage.LogLevel,System.String,System.Exception)">
+            <summary>
+            Preferred constructor for convertation from some another log message format
+            </summary>
+            <param name="counter"></param>
+            <param name="logger"></param>
+            <param name="message"></param>
+            <param name="level"></param>
+            <param name="stack"></param>
+            <param name="exception"></param>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessage.#ctor(System.String,System.String,Silentor.FBRLogger.LogMessage.LogLevel,System.String,System.Exception)">
+            <summary>
+            Preferred constructor for convertation from some another log message format
+            </summary>
+            <param name="counter"></param>
+            <param name="logger"></param>
+            <param name="message"></param>
+            <param name="level"></param>
+            <param name="stack"></param>
+            <param name="exception"></param>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessage.#ctor(System.UInt32,System.Int64,System.String,System.String,Silentor.FBRLogger.LogMessage.LogLevel,System.Int32,System.String,System.String)">
+            <summary>
+            Deserializing constructor
+            </summary>
+            <param name="counter"></param>
+            <param name="dateTime"></param>
+            <param name="logger"></param>
+            <param name="message"></param>
+            <param name="level"></param>
+            <param name="threadId"></param>
+            <param name="stack"></param>
+            <param name="exception"></param>
+        </member>
+        <member name="T:Silentor.FBRLogger.LogMessage.Formatter">
+            <summary>
+            Read/write log message to stream
+            </summary>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessage.Formatter.#ctor(System.IO.Stream)">
+            <summary>
+            Stream oriented
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessage.Formatter.Serialize(Silentor.FBRLogger.LogMessage)">
+            <summary>
+            Serialize message to this <see cref="P:Silentor.FBRLogger.LogMessage.Formatter.Stream"/>
+            </summary>
+            <param name="message"></param>
+            <returns>Lenght of serialized message</returns>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessage.Formatter.Deserialize">
+            <summary>
+            Deserialize from this <see cref="P:Silentor.FBRLogger.LogMessage.Formatter.Stream"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Silentor.FBRLogger.LogMessage.Formatter.Stream">
+            <summary>
+            Underlying stream for reader or/and writer
+            </summary>
+        </member>
+        <member name="T:Silentor.FBRLogger.LogMessageSender">
+            <summary>
+            Sends FBR log messages to remote log viewer by UDP
+            </summary>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessageSender.#ctor(System.String,System.Int32)">
+            <summary>
+            Create sender with host name and port of remote log viewer
+            </summary>
+            <param name="host"></param>
+            <param name="port"></param>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessageSender.Send(Silentor.FBRLogger.LogMessage)">
+            <summary>
+            Send message to remote log viewer. Thread-safe
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Silentor.FBRLogger.LogMessageSender.Dispose">
+            <summary>
+            Dispose log messages sender
+            </summary>
+        </member>
+    </members>
+</doc>

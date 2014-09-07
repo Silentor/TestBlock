@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{75A505A4-1CF6-4469-A7D3-0E204AB3C9F3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Silentor.TB.Common</RootNamespace>
+    <AssemblyName>Common</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+    <BaseIntermediateOutputPath>..\..\..\Temp\common.obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Client.Unity\Assets\Libs.Ext\Common\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>C:\Users\Silentor\Documents\Projects\TestBlock\Client.Unity\Assets\Libs.Ext\Common\Common.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\Temp\release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\..\Temp\Common.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Lidgren.Network">
+      <HintPath>..\Client.Unity\Assets\Tools\Lidgren\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="LZ4s">
+      <HintPath>..\Client.Unity\Assets\Tools\LZ4\LZ4s.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\Client.Unity\Assets\Tools\NLog\NLog.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\Client.Unity\Assets\Tools\Protobuf\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Config\IGlobeConfig.cs" />
+    <Compile Include="Exceptions\ChunkException.cs" />
+    <Compile Include="Exceptions\CommonException.cs" />
+    <Compile Include="Exceptions\TaskException.cs" />
+    <Compile Include="Network\Compression\LZ4Encrypter.cs" />
+    <Compile Include="Network\Messages\ChunkRequestMessage.cs" />
+    <Compile Include="Network\Messages\PlayerMessages.cs" />
+    <Compile Include="Network\DeliveryMethod.cs" />
+    <Compile Include="Network\Messages\StreamHeader.cs" />
+    <Compile Include="Network\Settings.cs" />
+    <Compile Include="Network\Messages\Message.cs" />
+    <Compile Include="Network\Messages\Headers.cs" />
+    <Compile Include="Network\Serialization\CommandSerializer.cs" />
+    <Compile Include="Network\Messages\HeroManagement.cs" />
+    <Compile Include="Network\Messages\UnityContracts.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Maps\Blocks\Block.cs" />
+    <Compile Include="Maps\Blocks\BlockData.cs" />
+    <Compile Include="Maps\Blocks\BlockSet.cs" />
+    <Compile Include="Maps\Blocks\CubeFace.cs" />
+    <Compile Include="Network\Messages\ChunkContents.cs" />
+    <Compile Include="Maps\Geometry\Bounds2i.cs" />
+    <Compile Include="Maps\Geometry\Bounds3i.cs" />
+    <Compile Include="Maps\Geometry\Grid.cs" />
+    <Compile Include="Maps\Geometry\Rayi.cs" />
+    <Compile Include="Maps\Geometry\Vector2i.cs" />
+    <Compile Include="Maps\Geometry\Vector3i.cs" />
+    <Compile Include="Tools\Annotations.cs" />
+    <Compile Include="Tools\AverageTimer.cs" />
+    <Compile Include="Tools\FastIntPerlinNoise.cs" />
+    <Compile Include="Tools\LockFreeQueue.cs" />
+    <Compile Include="Tools\PriorityQueue.cs" />
+    <Compile Include="Tools\SimplexNoise.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Debug\" />
+    <Folder Include="Players\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

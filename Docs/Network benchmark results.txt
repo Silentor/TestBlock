@@ -1,0 +1,7 @@
+Пустая имитация чанков (06.09.2013), сериализация - protobuf-net full, девайс - SGS3
+
+1) Без компрессии - 55 мсек
+2) SharpZipLibGzipCompressor - 77 мсек
+3) QuickLZCompressor.QuickLZ - not supported
+4) LZMACompressor - 500 мсек
+

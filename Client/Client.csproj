@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{07C73492-34E6-43D6-A6C4-B2115D3D8E05}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Silentor.TB.Client</RootNamespace>
+    <AssemblyName>Client.Core</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+    <BaseIntermediateOutputPath>..\..\..\Temp\client.core.obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Client.Unity\Assets\Libs.Ext\Client.Core\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>C:\Users\Silentor\Documents\Projects\TestBlock\Client.Unity\Assets\Libs.Ext\Client.Core\Client.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FBRLogger">
+      <HintPath>..\Client.Unity\Assets\Tools\FBRLogger\FBRLogger.dll</HintPath>
+    </Reference>
+    <Reference Include="FBRLogger.NLogTarget">
+      <HintPath>..\Client.Unity\Assets\Tools\FBRLogger\FBRLogger.NLogTarget.dll</HintPath>
+    </Reference>
+    <Reference Include="Lidgren.Network">
+      <HintPath>..\Client.Unity\Assets\Tools\Lidgren\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\Client.Unity\Assets\Tools\NLog\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\Client.Unity\Assets\Tools\Protobuf\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\..\..\..\..\..\Program Files (x86)\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Config\IInputConfig.cs" />
+    <Compile Include="Exceptions\AssertFailException.cs" />
+    <Compile Include="Exceptions\ClientException.cs" />
+    <Compile Include="IClientApp.cs" />
+    <Compile Include="Input\IInput.cs" />
+    <Compile Include="Maps\Chunk.cs" />
+    <Compile Include="Maps\Chunklet.cs" />
+    <Compile Include="Maps\IChunkFactory.cs" />
+    <Compile Include="Maps\IMap.cs" />
+    <Compile Include="Maps\IMapLoader.cs" />
+    <Compile Include="Maps\Map.cs" />
+    <Compile Include="Meshing\IChunkletMesher.cs" />
+    <Compile Include="Players\ActorConfig.cs" />
+    <Compile Include="Players\Enemy.cs" />
+    <Compile Include="Players\IActor.cs" />
+    <Compile Include="Players\IEnemy.cs" />
+    <Compile Include="Players\IPlayer.cs" />
+    <Compile Include="Storage\ChunkStorage.cs" />
+    <Compile Include="Storage\IChunkStorage.cs" />
+    <Compile Include="Tools\Assert.cs" />
+    <Compile Include="Config\IGameConfig.cs" />
+    <Compile Include="Config\ISystemConfig.cs" />
+    <Compile Include="Tools\Bounds3iExtensions.cs" />
+    <Compile Include="Tools\IApplicationEvents.cs" />
+    <Compile Include="Maps\SimpleMapLoader.cs" />
+    <Compile Include="Maps\IWorld.cs" />
+    <Compile Include="Network\IClientServer.cs" />
+    <Compile Include="Network\IServer.cs" />
+    <Compile Include="Network\IServerClient.cs" />
+    <Compile Include="Network\RemoteServer.cs" />
+    <Compile Include="Maps\RemoteWorld.cs" />
+    <Compile Include="Players\Actor.cs" />
+    <Compile Include="Players\IEnemyFactory.cs" />
+    <Compile Include="Players\Player.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Meshing\IBlocksAtlas.cs" />
+    <Compile Include="Meshing\MeshData.cs" />
+    <Compile Include="Meshing\Renderers.cs" />
+    <Compile Include="Meshing\SimplestBlockMesher.cs" />
+    <Compile Include="Meshing\SimplestChunkletMesher.cs" />
+    <Compile Include="Tools\LoggingBase.cs" />
+    <Compile Include="Tools\QuaternionExtensions.cs" />
+    <Compile Include="Tools\Tuple.cs" />
+    <Compile Include="Tools\Vector2Extensions.cs" />
+    <Compile Include="Tools\Vector3Extensions.cs" />
+    <Compile Include="Tools\Worker.cs" />
+    <Compile Include="Visualization\IActorVisualizer.cs" />
+    <Compile Include="Visualization\IMapVisualizer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{75a505a4-1cf6-4469-a7d3-0e204ab3c9f3}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29ccdce2325502b43a5673879313890e, type: 3}
+  m_Name: BlocksAtlas
+  m_EditorClassIdentifier: 
+  OpaqueLink: {fileID: 2100000, guid: a962279a1a3a76448a7204987cbe0dd2, type: 2}
+  TransparentLink: {fileID: 2100000, guid: 6ce249b89faa03942827d748590e0329, type: 2}
+  Description: {fileID: 4900000, guid: b3467cd7b515acc4a98fccf64bc67d9d, type: 3}

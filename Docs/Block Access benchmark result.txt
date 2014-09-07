@@ -1,0 +1,17 @@
+SGS3
+
+                     SGS3 Dev   SGS3 Rel
+
+Set mult             408        411
+Set shift            411        411 
+Set coords mult      238        235
+Set coords shift     235        237
+Set directly mult    260        261
+Set directly shift   258        258 
+
+Get mult             561        563
+Get shift            567        569 
+Get coords mult      388        390 
+Get coords shift     387        391
+Get directly mult    383        385
+Get directly shift   382        384 

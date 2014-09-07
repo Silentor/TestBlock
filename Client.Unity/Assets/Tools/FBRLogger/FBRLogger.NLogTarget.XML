@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FBRLogger.NLogTarget</name>
+    </assembly>
+    <members>
+        <member name="T:Silentor.FBRLogger.NLogTarget.FBRTarget">
+            <summary>
+            Target for sending NLog events to FBR
+            </summary>
+        </member>
+        <member name="M:Silentor.FBRLogger.NLogTarget.FBRTarget.Write(NLog.LogEventInfo)">
+            <summary>
+            Write NLog event to FBR target
+            </summary>
+            <param name="logEvent"></param>
+        </member>
+        <member name="P:Silentor.FBRLogger.NLogTarget.FBRTarget.Host">
+            <summary>
+            The name of the remote log viewer host ("localhost" or "192.168.0.1"). Default: localhost
+            </summary>
+        </member>
+        <member name="P:Silentor.FBRLogger.NLogTarget.FBRTarget.Port">
+            <summary>
+            Port of the remote log viewer host 
+            </summary>
+        </member>
+    </members>
+</doc>

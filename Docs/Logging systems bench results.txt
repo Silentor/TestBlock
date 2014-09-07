@@ -1,0 +1,10 @@
+SGS3
+
+UnityEngine.Debug.Log                       Memory allocation 3.6 KB      time  7.71 msec
+Raw FBRLogger (no stack no exception)       Memory allocation 9 B         time  0.42 msec
+Raw FBRLogger (stack trace)                 Memory allocation 1.8 KB      time  1.71 msec
+Raw FBRLogger (stack trace + exception)     Memory allocation 4.1 KB      time  3.95 msec
+FBR to NLog (no exception)                  Memory allocation 357 B       time  1.23 msec
+FBR to NLog (with exception)                Memory allocation 2.5 KB      time  2.99 msec
+NLog for NLogView (no exception)            Memory allocation 12.7 B      time  3.81 msec
+NLog for NLogView (with exception)          Memory allocation 22.6 B      time  4.60 msec
