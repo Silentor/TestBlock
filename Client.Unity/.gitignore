@@ -14,6 +14,9 @@
 /*.booproj
 *.mdb
 
+# I prefer to save UnityVs generated projects for inlude to main solution
+!UnityVS.Client.Unity.CSharp.csproj
+!UnityVS.Client.Unity.CSharp.Editor.csproj
 
 #Unity3D Generated File On Crash Reports
 sysinfo.txt
