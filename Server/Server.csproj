@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FBRLogger.NLogTarget">
-      <HintPath>..\Client\Assets\Tools\FBRLogger\FBRLogger.NLogTarget.dll</HintPath>
+      <HintPath>..\..\TestBlock\Client.Unity\Assets\Tools\FBRLogger\FBRLogger.NLogTarget.dll</HintPath>
     </Reference>
     <Reference Include="FluentAssertions">
       <HintPath>..\packages\FluentAssertions.3.0.107\lib\net45\FluentAssertions.dll</HintPath>

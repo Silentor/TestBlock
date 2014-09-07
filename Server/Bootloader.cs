@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Linq;
 using NLog;
-using NLog.Config;
-using NLog.Targets;
-using Silentor.FBRLogger.NLogTarget;
 using Silentor.TB.Common.Config;
 using Silentor.TB.Common.Maps.Blocks;
 using Wob.Server.Config;
