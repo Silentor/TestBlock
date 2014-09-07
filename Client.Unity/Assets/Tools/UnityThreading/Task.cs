@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using System;
-using System.Threading;
 using System.Collections;
+using System.Threading;
 
-namespace UnityThreading
+namespace Silentor.TB.Client.Tools.UnityThreading
 {
     public enum TaskSortingSystem
     {
@@ -165,7 +164,7 @@ namespace UnityThreading
                     return;
                 }
 
-                var currentThread = UnityThreading.ThreadBase.CurrentThread;
+                var currentThread = global::Silentor.TB.Client.Tools.UnityThreading.ThreadBase.CurrentThread;
                 do
                 {
                     var task = (TaskBase)enumerator.Current;

@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace UnityThreading
+namespace Silentor.TB.Client.Tools.UnityThreading
 {
     public abstract class DispatcherBase : IDisposable
     {
@@ -79,8 +79,8 @@ namespace UnityThreading
             {
                 taskList.Add(task);
                 
-                if (TaskSortingSystem == UnityThreading.TaskSortingSystem.ReorderWhenAdded ||
-                    TaskSortingSystem == UnityThreading.TaskSortingSystem.ReorderWhenExecuted)
+                if (TaskSortingSystem == global::Silentor.TB.Client.Tools.UnityThreading.TaskSortingSystem.ReorderWhenAdded ||
+                    TaskSortingSystem == global::Silentor.TB.Client.Tools.UnityThreading.TaskSortingSystem.ReorderWhenExecuted)
                     ReorderTasks();
 
                 dataEvent.Set();
@@ -94,8 +94,8 @@ namespace UnityThreading
                 foreach (var task in tasks)
                     taskList.Add(task);
 
-                if (TaskSortingSystem == UnityThreading.TaskSortingSystem.ReorderWhenAdded ||
-                    TaskSortingSystem == UnityThreading.TaskSortingSystem.ReorderWhenExecuted)
+                if (TaskSortingSystem == global::Silentor.TB.Client.Tools.UnityThreading.TaskSortingSystem.ReorderWhenAdded ||
+                    TaskSortingSystem == global::Silentor.TB.Client.Tools.UnityThreading.TaskSortingSystem.ReorderWhenExecuted)
                     ReorderTasks();
 
                 dataEvent.Set();

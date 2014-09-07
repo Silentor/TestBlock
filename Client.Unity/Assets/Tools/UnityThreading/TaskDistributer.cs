@@ -1,13 +1,10 @@
 //#define NO_UNITY
 
-using System.Collections.Generic;
 using System;
-using System.Linq;
-using System.Threading;
 using System.Collections;
-using UnityEngine;
+using System.Threading;
 
-namespace UnityThreading
+namespace Silentor.TB.Client.Tools.UnityThreading
 {
     public class TaskDistributor : DispatcherBase
 	{

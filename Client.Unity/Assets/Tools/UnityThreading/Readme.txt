@@ -1,0 +1,1 @@
+﻿This project was googled somewhere, it is not my code. Used to peek into some threading programming patterns.
