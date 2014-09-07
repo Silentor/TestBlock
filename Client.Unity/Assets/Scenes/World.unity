@@ -167,9 +167,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SystemSettings:
-    LoggerAddress: 192.168.0.100
+    LoggerAddress: 127.0.0.1
     LoggerPort: 9998
-    ServerAddress: 192.168.0.100
+    ServerAddress: 127.0.0.1
     ServerPort: 10000
     ApplicationEvents: {fileID: 7509625}
   GameSettings:
