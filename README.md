@@ -9,7 +9,7 @@ Training project - simple Minecraft-like online multiplayer game. Work is just b
 
 * Client: Unity3d + Zenject (Unity friendly DI framework)
 
-* Logging: NLog + Log4View (log viewer)
+* Logging: (customized on client) NLog + Log4View (log viewer)
 
 * Testing: NUnit + NSubstitute + FluentAssertions
 
