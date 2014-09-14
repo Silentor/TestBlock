@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using FluentAssertions;
 using JetBrains.Annotations;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using NLog;
-using Silentor.TB.Common.Network;
 using Silentor.TB.Common.Network.Messages;
 using Silentor.TB.Common.Network.Serialization;
 using Silentor.TB.Common.Tools;
-using Wob.Server.Players;
-using Wob.Server.Tools;
+using Silentor.TB.Server.Players;
+using Silentor.TB.Server.Tools;
 
-namespace Wob.Server.Network
+namespace Silentor.TB.Server.Network
 {
     /// <summary>
     /// Network connection from server to client
@@ -23,7 +20,7 @@ namespace Wob.Server.Network
         private readonly NetConnection _connection;
         private readonly Server _server;
         private readonly NetPeer _client;
-        private readonly CommandSerializer _serializer = new CommandSerializer();
+        private readonly MessageSerializer _serializer;
 
         //Streaming send stuff
         private readonly ConcurrentQueue<byte[]> _streamsToSend = new ConcurrentQueue<byte[]>();
@@ -50,6 +47,7 @@ namespace Wob.Server.Network
             _headerPacketLenght = _packetLenght - 10;           //Зарезервировать немного места под заголовочную информацию
 
             _packetBuffer = new byte[_packetLenght];
+            _serializer = new MessageSerializer(() => _client.CreateMessage());
 
             Log = LogManager.GetLogger("Wob.Server.Network.Session" + id);
             Log.Debug("Created session");
@@ -67,8 +65,7 @@ namespace Wob.Server.Network
 
         public void SendPosition(int id, Vector3 position, Quaternion rotation, bool isRemoved = false)
         {
-            var playerPosition = new EntityUpdate() { Id = id, Position = position.ToProtoVector(), 
-                Rotation = rotation.ToProtoQuaternion(), IsRemoved = isRemoved };
+            var playerPosition = new EntityUpdate(id, position.ToProtoVector(), rotation.ToProtoQuaternion(), isRemoved);
             _server.Send(playerPosition, this);
 
             Log.Info("<-... Send new position {0}", playerPosition);
@@ -171,6 +168,12 @@ namespace Wob.Server.Network
         {
             return _client.CreateMessage(size);
         }
+
+        public NetOutgoingMessage CreateSendBuffer()
+        {
+            return _client.CreateMessage();
+        }
+
 
         public void Close()
         {

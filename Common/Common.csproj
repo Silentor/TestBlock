@@ -24,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>C:\Users\Silentor\Documents\Projects\TestBlock\Client.Unity\Assets\Libs.Ext\Common\Common.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,9 +47,6 @@
       <HintPath>..\Client.Unity\Assets\Tools\NLog\NLog.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>..\Client.Unity\Assets\Tools\Protobuf\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -60,14 +58,17 @@
     <Compile Include="Exceptions\TaskException.cs" />
     <Compile Include="Network\Compression\LZ4Encrypter.cs" />
     <Compile Include="Network\Messages\ChunkRequestMessage.cs" />
-    <Compile Include="Network\Messages\PlayerMessages.cs" />
+    <Compile Include="Network\Messages\EntityUpdate.cs" />
+    <Compile Include="Network\Serialization\HeaderAttribute.cs" />
+    <Compile Include="Network\Messages\PlayerMovement.cs" />
     <Compile Include="Network\DeliveryMethod.cs" />
     <Compile Include="Network\Messages\StreamHeader.cs" />
+    <Compile Include="Network\Serialization\NetBufferExtensions.cs" />
+    <Compile Include="Network\Serialization\MessageSerializer.cs" />
     <Compile Include="Network\Settings.cs" />
     <Compile Include="Network\Messages\Message.cs" />
     <Compile Include="Network\Messages\Headers.cs" />
-    <Compile Include="Network\Serialization\CommandSerializer.cs" />
-    <Compile Include="Network\Messages\HeroManagement.cs" />
+    <Compile Include="Network\Messages\Login.cs" />
     <Compile Include="Network\Messages\UnityContracts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Maps\Blocks\Block.cs" />

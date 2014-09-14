@@ -25,9 +25,9 @@ namespace Silentor.TB.Client.Maps
 
         public Vector2i Position { get; private set; }
 
-        public Common.Maps.IMap Map { get; private set; }
+        public IMap Map { get; private set; }
 
-        private void InitChunk(Common.Maps.IMap map, Vector2i pos)
+        private void InitChunk(IMap map, Vector2i pos)
         {
             if (map == null) throw new ArgumentNullException("map");
 
@@ -36,7 +36,7 @@ namespace Silentor.TB.Client.Maps
             Map = map;
         }
 
-        public Chunk(Common.Maps.IMap map, ChunkContents contents)
+        public Chunk(IMap map, ChunkContents contents)
         {
             InitChunk(map, contents.Position);
 

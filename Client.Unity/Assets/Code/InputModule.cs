@@ -1,6 +1,6 @@
 ﻿using System;
-using Assets.Code.Config;
 using ModestTree.Zenject;
+using Silentor.TB.Client.Config;
 using Silentor.TB.Client.Input;
 
 namespace Silentor.TB.Client

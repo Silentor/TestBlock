@@ -1,8 +1,8 @@
 ﻿using Lidgren.Network;
 using Silentor.TB.Common.Network.Messages;
-using Wob.Server.Players;
+using Silentor.TB.Server.Players;
 
-namespace Wob.Server.Network
+namespace Silentor.TB.Server.Network
 {
     public class IncomingEnvelop
     {

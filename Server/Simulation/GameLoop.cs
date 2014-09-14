@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NLog;
-using Wob.Server.Maps;
-using Wob.Server.Players;
 
-namespace Wob.Server.Simulation
+namespace Silentor.TB.Server.Simulation
 {
     /// <summary>
     /// Process simulation loops

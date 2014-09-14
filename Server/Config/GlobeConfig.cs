@@ -1,7 +1,7 @@
 ﻿using Silentor.TB.Common.Config;
 using Silentor.TB.Common.Maps.Geometry;
 
-namespace Wob.Server.Config
+namespace Silentor.TB.Server.Config
 {
     public class GlobeConfig : IGlobeConfig
     {

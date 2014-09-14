@@ -1,21 +1,25 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 using System.IO;
-using ProtoBuf;
 using Silentor.TB.Common.Config;
 using Silentor.TB.Common.Maps.Blocks;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Messages;
+using Silentor.TB.Common.Network.Serialization;
 using UnityEngine;
 
 namespace Assets.Code.Benchmarks
 {
     public class SerializationSpeedBenchmark : MonoBehaviour 
     {
+        private MessageSerializer _serializer;
+
         // Use this for initialization
         void Start()
         {
             print("Stopwatch: freq " + Stopwatch.Frequency + ", is high resolution " + Stopwatch.IsHighResolution);
+
+            _serializer = new MessageSerializer();
 
             //Warm up
             for (int i = 0; i < 10; i++)
@@ -52,14 +56,11 @@ namespace Assets.Code.Benchmarks
             var generator = new TestGenerator(wrld, blockSet);
             var first = generator.GenerateSync(Vector2i.Zero);
 
-            var stream = new MemoryStream();
-
             var sw = Stopwatch.StartNew();
-            Serializer.Serialize(stream, first);
-            stream.Position = 0;
-            var second = Serializer.Deserialize<ChunkContents>(stream);
+            var buffer = _serializer.Serialize(first);
+            var second = _serializer.Deserialize(buffer);
 
-            print("Serialized/deserialized time: " + sw.ElapsedMilliseconds + " ms, data size: " + stream.Length);
+            print("Serialized/deserialized time: " + sw.ElapsedMilliseconds + " ms, data size: " + buffer.LengthBytes);
         }
 
     

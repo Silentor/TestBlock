@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
-using Microsoft.Xna.Framework;
 using NLog;
-using Wob.Server.Maps;
-using Wob.Server.Players;
+using Silentor.TB.Server.Maps;
+using Silentor.TB.Server.Players;
 
-namespace Wob.Server.Network
+namespace Silentor.TB.Server.Network
 {
     /// <summary>
     /// Updates client when player is changed, translates client actions to player

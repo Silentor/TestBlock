@@ -5,7 +5,7 @@ using NLog;
 using Silentor.TB.Common.Maps.Blocks;
 using Silentor.TB.Common.Maps.Geometry;
 
-namespace Wob.Server.Maps
+namespace Silentor.TB.Server.Maps
 {
     /// <summary>
     /// Квадратный массив чанков, где существует игрок (наблюдатель) и симулируемое окружение

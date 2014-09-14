@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using NLog;
 
-namespace Wob.Server.Time
+namespace Silentor.TB.Server.Time
 {
     public class Timer
     {

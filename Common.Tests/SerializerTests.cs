@@ -1,30 +1,23 @@
 ﻿using System;
 using System.Linq;
+using Lidgren.Network;
 using NUnit.Framework;
-using ProtoBuf;
-using ProtoBuf.Meta;
 using Silentor.TB.Common.Network.Messages;
 using Silentor.TB.Common.Network.Serialization;
-using Random = System.Random;
 
-namespace Common.Tests
+namespace Silentor.TB.Common.Tests
 {
     [TestFixture]
     public class SerializerTests
     {
-        private CommandSerializer _serializer;
+        private MessageSerializer _serializer;
         private static bool _isTestContractAdded;
 
         [TestFixtureSetUp]
         public void Init()
         {
-            if (!_isTestContractAdded)
-            {
-                RuntimeTypeModel.Default.Add(typeof (Message), true).AddSubType(666, typeof (TestMessage));
-                _isTestContractAdded = true;
-            }
-
-            _serializer = new CommandSerializer();
+            _serializer = new MessageSerializer();
+            _serializer.AddMessageHeader<TestMessage>(Headers.Test);
         }
 
         [TestCase(true)]
@@ -36,9 +29,10 @@ namespace Common.Tests
             var startData = data.ToArray();
             var cmd = new TestMessage() {Data = startData};
             int size;
-            var serialized = _serializer.Encode(cmd, out size, isCompressed);
+            var serialized = _serializer.Serialize(cmd, out size);
+            Array.Resize(ref serialized, size);
 
-            var cmd2 = (TestMessage)_serializer.Decode(serialized, isCompressed);
+            var cmd2 = (TestMessage)_serializer.Deserialize(serialized);
 
             Assert.That(cmd.Data, Is.EqualTo(startData));
             Assert.That(cmd2.Data, Is.EqualTo(startData));
@@ -53,9 +47,10 @@ namespace Common.Tests
             var startData = data.ToArray();
             var cmd = new TestMessage() { Data = startData };
             int size;
-            var serialized = _serializer.Encode(cmd, out size, isCompressed);
+            var serialized = _serializer.Serialize(cmd, out size);
+            Array.Resize(ref serialized, size);
 
-            var cmd2 = (TestMessage)_serializer.Decode(serialized, isCompressed);
+            var cmd2 = (TestMessage)_serializer.Deserialize(serialized);
 
             Assert.That(cmd.Data, Is.EqualTo(startData));
             Assert.That(cmd2.Data, Is.EqualTo(startData));
@@ -68,11 +63,11 @@ namespace Common.Tests
             Message baseCmd = cmd;
 
             int size;
-            var serialized = _serializer.Encode(baseCmd, out size);
+            var serialized = _serializer.Serialize(baseCmd, out size);
             var serialized2 = new byte[size];
             Array.Copy(serialized, serialized2, size);
 
-            var cmd2 = (LoginData)_serializer.Decode(serialized2);
+            var cmd2 = (LoginData)_serializer.Deserialize(serialized2);
 
             Assert.That(cmd.Name, Is.EqualTo(cmd2.Name));
         }
@@ -102,15 +97,30 @@ namespace Common.Tests
         }
     }
 
-    [ProtoContract]
     public class TestMessage : Message
     {
+        [Header(Headers.Test)]
         public override Headers Header
         {
-            get { return (Headers)255; }
+            get { return Headers.Test; }
         }
 
-        [ProtoMember(1, IsPacked = true, OverwriteList = true, IsRequired = true)]
         public byte[] Data;
+
+        public override void Serialize(NetBuffer buffer)
+        {
+            base.Serialize(buffer);
+
+            buffer.WriteVariableInt32(Data.Length);
+            buffer.Write(Data);
+        }
+
+        public override void Deserialize(NetBuffer buffer)
+        {
+            base.Deserialize(buffer);
+
+            var length = buffer.ReadVariableInt32();
+            Data = buffer.ReadBytes(length);
+        }
     }
 }

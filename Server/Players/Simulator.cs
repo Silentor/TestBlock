@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NLog;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Messages;
-using Wob.Server.Maps;
-using Wob.Server.Network;
-using Wob.Server.Tools;
+using Silentor.TB.Server.Maps;
+using Silentor.TB.Server.Network;
+using Silentor.TB.Server.Tools;
 
-namespace Wob.Server.Players
+namespace Silentor.TB.Server.Players
 {
     /// <summary>
-    /// Combines player, map and all its environment, responsible for Player <-> Hero relations
+    /// Combines player, map and all its environment, responsible for Player - Hero relations
     /// </summary>
     public class Simulator
     {

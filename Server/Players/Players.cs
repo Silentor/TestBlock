@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
+using Silentor.TB.Common.Tools;
 
-namespace Wob.Server.Players
+namespace Silentor.TB.Server.Players
 {
     /// <summary>
     /// Manages list of heroes in the world

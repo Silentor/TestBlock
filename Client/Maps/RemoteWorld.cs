@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using NLog;
-using Silentor.TB.Client.Maps;
+using Silentor.TB.Client.Network;
 using Silentor.TB.Client.Players;
 using Silentor.TB.Client.Tools;
 using Silentor.TB.Common.Config;
 using Silentor.TB.Common.Network.Messages;
 
-namespace Silentor.TB.Client.Network
+namespace Silentor.TB.Client.Maps
 {
     public class RemoteWorld : IWorld
     {

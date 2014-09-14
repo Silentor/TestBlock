@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using NLog;
-using Wob.Server.Maps;
-using Wob.Server.Players;
+using Silentor.TB.Server.Maps;
+using Silentor.TB.Server.Players;
 
-namespace Wob.Server
+namespace Silentor.TB.Server
 {
     /// <summary>
     /// Manages all-players stuff
     /// </summary>
     public class World
     {
-        private readonly Network.Server _server;
+        private readonly Silentor.TB.Server.Network.Server _server;
         private readonly Globe _globe;
         private readonly Time.Timer _timer;
 
@@ -35,7 +35,7 @@ namespace Wob.Server
             }
         }
 
-        public World(Network.Server server, Globe globe, Time.Timer timer)
+        public World(Silentor.TB.Server.Network.Server server, Globe globe, Time.Timer timer)
         {
             _server = server;
             _globe = globe;

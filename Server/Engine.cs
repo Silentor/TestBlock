@@ -1,23 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using JetBrains.Annotations;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using NLog;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Messages;
-using Wob.Server.Maps;
-using Wob.Server.Network;
-using Wob.Server.Players;
-using Wob.Server.Tools;
-using Timer = Wob.Server.Time.Timer;
+using Silentor.TB.Server.Maps;
+using Silentor.TB.Server.Network;
+using Silentor.TB.Server.Players;
+using Silentor.TB.Server.Tools;
+using Timer = Silentor.TB.Server.Time.Timer;
 
-namespace Wob.Server
+namespace Silentor.TB.Server
 {
     public class Engine
     {
@@ -27,7 +24,7 @@ namespace Wob.Server
         /// <param name="server"></param>
         /// <param name="world"></param>
         /// <param name="timer"></param>
-        public Engine(Network.Server server, World world, Timer timer)
+        public Engine(Silentor.TB.Server.Network.Server server, World world, Timer timer)
         {
             Log.Trace("Start engine");
             
@@ -132,7 +129,7 @@ namespace Wob.Server
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        private readonly Network.Server _server;
+        private readonly Silentor.TB.Server.Network.Server _server;
         private readonly World _world;
         private readonly Timer _timer;
         private int _sessionIdCounter;

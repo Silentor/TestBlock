@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Silentor.TB.Common.Maps.Geometry;
-using Wob.Server.Maps;
-using Wob.Server.Tools;
+using Silentor.TB.Server.Maps;
+using Silentor.TB.Server.Tools;
 
-namespace Wob.Server.Players
+namespace Silentor.TB.Server.Players
 {
     /// <summary>
     /// Collect object around

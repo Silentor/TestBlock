@@ -5,6 +5,7 @@ using Silentor.TB.Client.Maps;
 using Silentor.TB.Client.Meshing;
 using Silentor.TB.Client.Visualization;
 using Silentor.TB.Common.Maps.Geometry;
+using Silentor.TB.Common.Tools;
 using UnityEngine;
 
 namespace Assets.Code.Visualization

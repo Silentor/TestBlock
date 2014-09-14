@@ -4,7 +4,6 @@ using System.Linq;
 using NLog;
 using Silentor.TB.Client.Config;
 using Silentor.TB.Client.Tools;
-using Silentor.TB.Client.Tools;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Serialization;
 using Silentor.TB.Common.Network.Messages;
@@ -21,7 +20,6 @@ namespace Silentor.TB.Client.Storage
             _capacity = gameConfig.ChunkCacheSize;
             _appEvents = appEvents;
             _storage = new Dictionary<Vector2i, StoredChunk>(_capacity);
-            _serializer = new CommandSerializer();
 
             _appEvents.FrameTick += AppEventsFrameTickTick;
         }
@@ -55,12 +53,12 @@ namespace Silentor.TB.Client.Storage
         private readonly int _capacity;
         private readonly IApplicationEvents _appEvents;
         private readonly Dictionary<Vector2i, StoredChunk> _storage;
-        private readonly CommandSerializer _serializer;
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         private int _newestAccessTime;
         private readonly Queue<ChunkContents> _storeQueue = new Queue<ChunkContents>();
         private readonly Queue<StoredChunk> _retrieveQueue = new Queue<StoredChunk>();
+        private readonly MessageSerializer _serializer = new MessageSerializer();
 
         private void DoRetrieved(ChunkContents chunk)
         {
@@ -82,7 +80,7 @@ namespace Silentor.TB.Client.Storage
 
         private void RetrieveAsync(StoredChunk storedChunk)
         {
-            var chunkContent = (ChunkContents)_serializer.Decode(storedChunk.PackedChunk, true);
+            var chunkContent = (ChunkContents)_serializer.Deserialize(storedChunk.PackedChunk);
             Log.Trace("Retrieved chunk content {0}", chunkContent.Position);
 
             DoRetrieved(chunkContent);
@@ -92,7 +90,7 @@ namespace Silentor.TB.Client.Storage
         {
             //Prepare data
             int length;
-            var data = _serializer.Encode(chunkContents, out length, true);
+            var data = _serializer.Serialize(chunkContents, out length);
             if (data.Length != length)
             {
                 var trimmed = new byte[length];

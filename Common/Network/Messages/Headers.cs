@@ -17,5 +17,6 @@
         EntityUpdate,
         PlayerMovement,
         
+        Test = 255
     }
 }

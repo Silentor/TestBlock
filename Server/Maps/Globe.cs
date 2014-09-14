@@ -5,11 +5,10 @@ using NLog;
 using Silentor.TB.Common.Config;
 using Silentor.TB.Common.Maps.Blocks;
 using Silentor.TB.Common.Maps.Geometry;
-using Wob.Server.Maps.Generators;
-using Wob.Server.Players;
-using Hills = Wob.Server.Maps.Generators.Hills;
+using Silentor.TB.Server.Maps.Generators;
+using Silentor.TB.Server.Players;
 
-namespace Wob.Server.Maps
+namespace Silentor.TB.Server.Maps
 {
     /// <summary>
     /// Main storage for all used chunk. <see cref="Map"/> classes gets Chunks from Globe.

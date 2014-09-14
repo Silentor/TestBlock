@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NLog;
 
-namespace Wob.Server.Tools
+namespace Silentor.TB.Server.Tools
 {
     public class Statistics
     {
-        public Statistics(Network.Server server)
+        public Statistics(Silentor.TB.Server.Network.Server server)
         {
             _statisticCollector = Task.Run(async () =>
             {

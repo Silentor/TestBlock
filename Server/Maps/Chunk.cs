@@ -4,7 +4,7 @@ using Silentor.TB.Common.Maps.Blocks;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Messages;
 
-namespace Wob.Server.Maps
+namespace Silentor.TB.Server.Maps
 {
     public class Chunk
     {
