@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
-using Wob.Server.Players;
+using Silentor.TB.Server.Players;
 
 namespace Server.Tests
 {

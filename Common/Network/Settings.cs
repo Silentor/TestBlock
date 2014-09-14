@@ -10,6 +10,7 @@ namespace Silentor.TB.Common.Network
     {
         public const string AppIdentifier = "Silentor.WoB";
         public const int Port = 10000;
+        public const int SecurityPort = 9999;
 
         //System management messages (login, disconnect...)
         public readonly static DeliveryMethod System = new DeliveryMethod(NetDeliveryMethod.ReliableOrdered, 0);

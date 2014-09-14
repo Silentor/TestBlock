@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using JetBrains.Annotations;
 using NLog;
+using Silentor.TB.Common.Tools;
 
 namespace Silentor.TB.Client.Tools
 {

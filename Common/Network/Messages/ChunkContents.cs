@@ -1,12 +1,12 @@
 ﻿using System;
-using ProtoBuf;
+using Lidgren.Network;
 using Silentor.TB.Common.Exceptions;
 using Silentor.TB.Common.Maps.Blocks;
 using Silentor.TB.Common.Maps.Geometry;
+using Silentor.TB.Common.Network.Serialization;
 
 namespace Silentor.TB.Common.Network.Messages
 {
-    [ProtoContract(SkipConstructor = true)]
     public class ChunkContents : Message, IChunkContent
     {
         public const int SizeXBits = 4;
@@ -17,6 +17,7 @@ namespace Silentor.TB.Common.Network.Messages
         public const int SizeZ = 1 << SizeZBits;
         public const int BlocksCount = SizeX * SizeY * SizeZ;
 
+        [Header(Headers.ChunkResponce)]
         public override Headers Header
         {
             get { return Headers.ChunkResponce; }
@@ -25,52 +26,37 @@ namespace Silentor.TB.Common.Network.Messages
         public override DeliveryMethod Delivery { get { return Settings.Chunk; } }
 
         #region Protobuf
-        [ProtoMember(1, IsRequired = true)]
         public Vector2i Position { get; private set; }
 
-        [ProtoMember(2, OverwriteList = true, IsPacked = true, IsRequired = true)]
-        private byte[] _blockId;
-
-        [ProtoMember(3, OverwriteList = true, IsPacked = true, IsRequired = true)]
-        private byte[] _blockData;
-
-        [ProtoMember(5, OverwriteList = true, IsPacked = true, IsRequired = true)]
         public byte[] HeightMap { get; private set; }
-
-
-        [ProtoBeforeSerialization]
-        private void Serialize()
+      
+        public override void Serialize(NetBuffer buffer)
         {
-            _blockId = new byte[BlocksCount];
-            _blockData = new byte[BlocksCount];
+            base.Serialize(buffer);
 
-            for (var i = 0; i < BlocksCount; i++)
+            buffer.Write(Position);
+            buffer.Write(HeightMap);
+            for (int i = 0; i < BlocksCount; i++)
             {
-                _blockId[i] = Blocks[i].Id;
-                _blockData[i] = Blocks[i].Data;
+                buffer.Write(Blocks[i].Id);
+                buffer.Write(Blocks[i].Data);
             }
         }
 
-        [ProtoAfterSerialization]
-        private void SerializeCleanup()
+        public override void Deserialize(NetBuffer buffer)
         {
-            _blockId = _blockData = null;
-        }
+            base.Deserialize(buffer);
 
-        [ProtoAfterDeserialization]
-        private void Deserialize()
-        {
-            if (_blockId.Length != BlocksCount) throw new ChunkException("Invalid blocks id array lenght");
-            if (_blockData.Length != BlocksCount) throw new ChunkException("Invalid blocks data array lenght");
+            Position = buffer.ReadVector2i();
+            HeightMap = buffer.ReadBytes(SizeX*SizeZ);
 
-            if (Blocks == null)
+            if(Blocks == null)
                 Blocks = new BlockData[BlocksCount];
 
-            for (var i = 0; i < BlocksCount; i++)
-                Blocks[i] = new BlockData(_blockId[i], _blockData[i]);
-
-            SerializeCleanup();
+            for (int i = 0; i < BlocksCount; i++)
+                Blocks[i] = new BlockData(buffer.ReadByte(), buffer.ReadByte());
         }
+
         #endregion
 
         /// <summary>
@@ -99,9 +85,12 @@ namespace Silentor.TB.Common.Network.Messages
             Position = position;
         }
 
-        private ChunkContents()
+        /// <summary>
+        /// Deserialization
+        /// </summary>
+        internal ChunkContents()
         {
-            //Blocks = new BlockData[Chunk.BlocksCount];
+            
         }
 
         public BlockData GetBlockData(int x, int y, int z)

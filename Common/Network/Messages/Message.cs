@@ -1,20 +1,31 @@
-﻿using ProtoBuf;
+﻿
+using Lidgren.Network;
 
 namespace Silentor.TB.Common.Network.Messages
 {
-    [ProtoContract(SkipConstructor = true)]
-    [ProtoInclude(50, typeof(LoginData))]
-    [ProtoInclude(51, typeof(LoginResponce))]
-    [ProtoInclude(52, typeof(ChunkRequestMessage))]
-    [ProtoInclude(53, typeof(ChunkContents))]
-    [ProtoInclude(54, typeof(StreamHeader))]
-    [ProtoInclude(55, typeof(EntityUpdate))]
-    [ProtoInclude(56, typeof(PlayerMovement))]
-    public abstract partial class Message
+    public abstract class Message
     {
         public abstract Headers Header { get; }
 
         public virtual DeliveryMethod Delivery { get { return Settings.System; } }
+
+        /// <summary>
+        /// Serialize message. Base method serializes <see cref="Header"/>
+        /// </summary>
+        /// <param name="buffer"></param>
+        public virtual void Serialize(NetBuffer buffer)
+        {
+            buffer.Write((byte)Header);
+        }
+
+        /// <summary>
+        /// Deserialize message. Base method does nothing
+        /// </summary>
+        /// <param name="buffer"></param>
+        public virtual void Deserialize(NetBuffer buffer)
+        {
+        }
+
     }
 
     /// <summary>
@@ -27,7 +38,8 @@ namespace Silentor.TB.Common.Network.Messages
     /// <summary>
     /// Login, Disconnect, etc
     /// </summary>
-    public abstract class HeroManagement : Message
+    public abstract class PlayerManagement : Message
     {
+        
     }
 }

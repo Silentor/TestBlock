@@ -3,13 +3,10 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using NLog;
 using Silentor.TB.Common.Config;
-using Silentor.TB.Common.Maps.Blocks;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Messages;
-using Silentor.TB.Common.Tools;
 
-
-namespace Wob.Server.Maps.Generators
+namespace Silentor.TB.Server.Maps.Generators
 {
     public abstract class ChunkGenerator : IChunkGenerator
     {

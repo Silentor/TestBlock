@@ -4,8 +4,7 @@ using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Messages;
 using Silentor.TB.Common.Tools;
 
-
-namespace Wob.Server.Maps.Generators
+namespace Silentor.TB.Server.Maps.Generators
 {
     public class Hills : ChunkGenerator
     {

@@ -3,13 +3,14 @@ using System.Linq;
 using NLog;
 using Silentor.TB.Common.Config;
 using Silentor.TB.Common.Maps.Blocks;
-using Wob.Server.Config;
-using Wob.Server.Maps;
-using Wob.Server.Simulation;
-using Wob.Server.Time;
-using Wob.Server.Tools;
+using Silentor.TB.Common.Network;
+using Silentor.TB.Server.Config;
+using Silentor.TB.Server.Maps;
+using Silentor.TB.Server.Simulation;
+using Silentor.TB.Server.Time;
+using Silentor.TB.Server.Tools;
 
-namespace Wob.Server
+namespace Silentor.TB.Server
 {
     /// <summary>
     /// Primary configuration and run server. Agnostic of project type
@@ -61,7 +62,7 @@ namespace Wob.Server
 
         private readonly Config _config;
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        private Network.Server _server;
+        private Silentor.TB.Server.Network.Server _server;
         private readonly GameLoop _gameLoop;
         private readonly Timer _timer;
         private World _world;
@@ -74,7 +75,8 @@ namespace Wob.Server
         {
             public string LoggerAddr = "192.168.0.100";
             public int LoggerPort = 9998;
-            public int Port = 10000;
+            public int SecurityPort = Settings.SecurityPort;
+            public int Port = Settings.Port;
         }
 
 

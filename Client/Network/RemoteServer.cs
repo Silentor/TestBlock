@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using Lidgren.Network;
 using NLog;
-using ProtoBuf;
 using Silentor.TB.Client.Config;
 using Silentor.TB.Client.Tools;
 using Silentor.TB.Client.Tools;
@@ -39,30 +38,23 @@ namespace Silentor.TB.Client.Network
             _applicationEvents.FrameTick += ApplicationEventsFrameTick;
             _applicationEvents.Closed += ApplicationEventsOnClosed;
 
-            Log.Info("Started");
+            _serializer = new MessageSerializer(() => _connection.CreateMessage());
 
-            Serializer.PrepareSerializer<Message>();
+            Log.Info("Server started");
         }
 
         public void GetChunk(Vector2i position)
         {
-            Log.Debug("...-> Chunk {0} requested", position);
+            var chunkRequestMessage = new ChunkRequestMessage(position);
+            SendMessage(chunkRequestMessage);
 
-            int size;
-            var data = _serializer.Encode(new ChunkRequestMessage() { Position = position }, out size);
-            var msg = _connection.CreateMessage(size);
-            msg.Write(data, 0, size);
-            _connection.SendMessage(msg, NetDeliveryMethod.ReliableUnordered);
+            Log.Debug("...-> Chunk {0} requested", position);
         }
 
         public void MovePlayer(Vector3 movement, Vector2 rotation, bool jump = false)
         {
-            int size;
-            var data = _serializer.Encode(new PlayerMovement { Movement = movement.ToProtoVector(), 
-                Rotation = rotation.ToProtoVector(), Jump = jump}, out size);
-            var msg = _connection.CreateMessage(size);
-            msg.Write(data, 0, size);
-            _connection.SendMessage(msg, NetDeliveryMethod.ReliableSequenced);
+            var playerMovement = new PlayerMovement (movement.ToProtoVector(), rotation.ToProtoVector(), jump);
+            SendMessage(playerMovement);
 
             Log.Debug("...-> Player movement {0}, rotation {1}, jump {2} send", movement, rotation, jump);
         }
@@ -71,12 +63,8 @@ namespace Silentor.TB.Client.Network
         {
             if(String.IsNullOrEmpty(name)) throw new ArgumentException("Name is not defined", "name");
 
-            int size;
             var loginData = new LoginData(name);
-            var data = _serializer.Encode(loginData, out size);
-            var msg = _connection.CreateMessage(size);
-            msg.Write(data, 0, size);
-            _connection.SendMessage(msg, NetDeliveryMethod.ReliableOrdered);
+            SendMessage(loginData);
 
             Log.Info("...-> Login player \"{0}\"", name);
         }
@@ -96,7 +84,7 @@ namespace Silentor.TB.Client.Network
         private readonly NetClient _connection;
         private Vector3i _playerPos;
         private int _sightRadius;
-        private readonly CommandSerializer _serializer = new CommandSerializer();
+        private readonly MessageSerializer _serializer;
 
         private static readonly Logger Log = LogManager.GetLogger("Client.Network.RemoteServer");
 
@@ -108,6 +96,12 @@ namespace Silentor.TB.Client.Network
         private void ApplicationEventsFrameTick()
         {
             GotMessage(null);
+        }
+
+        private void SendMessage(Message msg)
+        {
+            var buffer = (NetOutgoingMessage)_serializer.Serialize(msg);
+            _connection.SendMessage(buffer, msg.Delivery.Method, msg.Delivery.Channel);
         }
 
         private void DoChunkReceived(ChunkContents chunk)
@@ -209,72 +203,71 @@ namespace Silentor.TB.Client.Network
                 Log.Trace("Received and processed {0} user messages, time {1} ms", messagesCount, timer.ElapsedMilliseconds);
         }
 
-        private void ProcessStreamMessage(NetIncomingMessage im)
-        {
-            //Header packet (stream length and some start data)
-            if (_receivingStream.Length == 0)
-            {
-                var data = im.ReadBytes(im.LengthBytes);
-                var command = (StreamHeader)_serializer.Decode(data);
+        //private void ProcessStreamMessage(NetIncomingMessage im)
+        //{
+        //    //Header packet (stream length and some start data)
+        //    if (_receivingStream.Length == 0)
+        //    {
+        //        var data = im.ReadBytes(im.LengthBytes);
+        //        var command = (StreamHeader)_serializer.Decode(data);
 
-                _streamReceiverTimer = Environment.TickCount;
-                _streamLength = command.ContentLength;
+        //        _streamReceiverTimer = Environment.TickCount;
+        //        _streamLength = command.ContentLength;
 
-                //Stream is small and received in header packet
-                if (command.ContentLength == command.ContentStart.Length)
-                {
-                    Log.Trace("Received short stream, size {0}, time {1} msec", command.ContentLength,
-                        Environment.TickCount - _streamReceiverTimer);
+        //        //Stream is small and received in header packet
+        //        if (command.ContentLength == command.ContentStart.Length)
+        //        {
+        //            Log.Trace("Received short stream, size {0}, time {1} msec", command.ContentLength,
+        //                Environment.TickCount - _streamReceiverTimer);
 
-                    var chunkContent = (ChunkContents) _serializer.Decode(command.ContentStart, true);
-                    DoChunkReceived(chunkContent);
-                }
-                else
-                    _receivingStream.Write(command.ContentStart, 0, command.ContentStart.Length);
-            }
-                //Stream content packet
-            else
-            {
-                var data = im.ReadBytes(im.LengthBytes);
-                _receivingStream.Write(data, 0, data.Length);
+        //            var chunkContent = (ChunkContents) _serializer.Decode(command.ContentStart, true);
+        //            DoChunkReceived(chunkContent);
+        //        }
+        //        else
+        //            _receivingStream.Write(command.ContentStart, 0, command.ContentStart.Length);
+        //    }
+        //        //Stream content packet
+        //    else
+        //    {
+        //        var data = im.ReadBytes(im.LengthBytes);
+        //        _receivingStream.Write(data, 0, data.Length);
 
-                //Stream is received already
-                if (_receivingStream.Position == _streamLength)
-                {
-                    Log.Trace("Received long stream, size {0}, time {1} msec", _receivingStream.Length, Environment.TickCount - _streamReceiverTimer);
+        //        //Stream is received already
+        //        if (_receivingStream.Position == _streamLength)
+        //        {
+        //            Log.Trace("Received long stream, size {0}, time {1} msec", _receivingStream.Length, Environment.TickCount - _streamReceiverTimer);
 
-                    _receivingStream.Position = 0;
-                    var chunkContent = (ChunkContents)_serializer.Decode(_receivingStream.ToArray(), true);
-                    DoChunkReceived(chunkContent);
-                    _receivingStream.SetLength(0);
-                }
-            }
-        }
+        //            _receivingStream.Position = 0;
+        //            var chunkContent = (ChunkContents)_serializer.Decode(_receivingStream.ToArray(), true);
+        //            DoChunkReceived(chunkContent);
+        //            _receivingStream.SetLength(0);
+        //        }
+        //    }
+        //}
         
         private void ProcessDataMessage(NetIncomingMessage im, bool isCompressed = false)
         {
-            var data = im.ReadBytes(im.LengthBytes);
-            var command = _serializer.Decode(data, isCompressed);
+            var message = _serializer.Deserialize(im);
 
-            switch (command.Header)
+            switch (message.Header)
             {
                 case Headers.LoginResponce:
-                    var loginData = (LoginResponce) command;
+                    var loginData = (LoginResponce)message;
                     DoLogined(loginData);
                     break;
 
                 case Headers.ChunkResponce:
-                    var chunkData = (ChunkContents) command;
+                    var chunkData = (ChunkContents)message;
                     DoChunkReceived(chunkData);
                     break;
 
                 case Headers.EntityUpdate:
-                    var positionData = (EntityUpdate) command;
+                    var positionData = (EntityUpdate)message;
                     DoPositionUpdated(positionData);
                     break;
 
                 default:
-                    Log.Warn("Unexpected message header: {0}", (byte)command.Header);
+                    Log.Warn("Unexpected message header: {0}", (byte)message.Header);
                     break;
             }
         }

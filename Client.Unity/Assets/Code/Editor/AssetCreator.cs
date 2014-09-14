@@ -10,7 +10,7 @@ namespace Silentor.Wob.Client.Tools
         [MenuItem("Assets/Create/Atlas")]
         public static void CreateAtlasAsset()
         {
-            CreateScriptableObject<BlocksAtlas>();
+            //CreateScriptableObject<BlocksAtlas>();
         }
 
         private static void CreateScriptableObject<T>() where T : ScriptableObject

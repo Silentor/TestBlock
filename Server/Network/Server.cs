@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Lidgren.Network;
 using NLog;
-using ProtoBuf;
+
 using Silentor.TB.Common.Network;
 using Silentor.TB.Common.Network.Messages;
 using Silentor.TB.Common.Network.Serialization;
-using Wob.Server.Players;
-using Task = System.Threading.Tasks.Task;
-using ThreadPriority = System.Threading.ThreadPriority;
+using Silentor.TB.Server.Players;
+using Silentor.TB.Server.Tools;
 
-namespace Wob.Server.Network
+namespace Silentor.TB.Server.Network
 {
     /// <summary>
     /// Lidgren Network based server. Containts pull-based buffer of incoming messages
@@ -28,13 +30,15 @@ namespace Wob.Server.Network
             get { return _decodeToConsumer.AsObservable(); }
         }
 
-        public Server(int port = 10000)
+        public Server(int port = 10000, int securityPort = 9999)
         {
             var config = new NetPeerConfiguration(Settings.AppIdentifier);
             config.MaximumConnections = 100;
             config.Port = port;
             _server = new NetServer(config);
             _server.Start();
+
+            SetupSecurity(((IPEndPoint)_server.Socket.LocalEndPoint).Address, securityPort);
 
             Log.Info("Server starting at port {0}", _server.Port);
 
@@ -66,8 +70,6 @@ namespace Wob.Server.Network
 
             _producerToEncode.LinkTo(_encode, propagateOption);
             _encode.LinkTo(_send, propagateOption);
-
-            Serializer.PrepareSerializer<Message>();
         }
 
         /// <summary>
@@ -223,12 +225,8 @@ namespace Wob.Server.Network
 
                     case NetIncomingMessageType.Data:
                     {
-                        var binaryData = im.ReadBytes(im.LengthBytes);
-
                         //Deserialize message
-                        var serializer = GetSerializer();
-                        var command = serializer.Decode(binaryData);
-                        PutSerializer(serializer);
+                        var command = _serializer.Deserialize(im);
 
                         //Drop messages from unlogined clients except login messages
                         if (im.SenderConnection.Tag == null && command.Header != Headers.Login)
@@ -268,14 +266,9 @@ namespace Wob.Server.Network
         {
             try
             {
-                var serializer = GetSerializer();
-                int size;
-                var data = serializer.Encode(envelope.Message, out size,
-                    envelope.Message.Header == Headers.ChunkResponce);
-                PutSerializer(serializer);
-
-                var sendBuffer = envelope.Client.CreateSendBuffer(size);
-                sendBuffer.Write(data, 0, size);
+                //var serializer = GetSerializer();
+                var sendBuffer = envelope.Client.CreateSendBuffer();
+                envelope.Message.Serialize(sendBuffer);
                 envelope.SendBuffer = sendBuffer;
 
                 return envelope;
@@ -290,31 +283,29 @@ namespace Wob.Server.Network
         /// <summary>
         /// Parallelize by client connection
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="envelope"></param>
         private async Task WriteMessages(OutgoingEnvelop envelope)
         {
             try
             {
+                while (true)
                 {
-                    while (true)
-                    {
-                        int windowSize, freeWindowSlots;
-                        envelope.Client.Connection.GetSendQueueInfo(envelope.Message.Delivery.Method,
-                            envelope.Message.Delivery.Channel,
-                            out windowSize, out freeWindowSlots);
+                    int windowSize, freeWindowSlots;
+                    envelope.Client.Connection.GetSendQueueInfo(envelope.Message.Delivery.Method,
+                        envelope.Message.Delivery.Channel,
+                        out windowSize, out freeWindowSlots);
 
-                        if (freeWindowSlots > 0)
-                        {
-                            var result = envelope.Client.Connection.SendMessage(envelope.SendBuffer,
-                                envelope.Message.Delivery.Method,
-                                envelope.Message.Delivery.Channel);
-                            if (result == NetSendResult.Dropped || result == NetSendResult.FailedNotConnected)
-                                Log.Error("Message was not send, result: " + result);
-                            break;
-                        }
-                        else
-                            await Task.Delay(1);
+                    if (freeWindowSlots > 0)
+                    {
+                        var result = envelope.Client.Connection.SendMessage(envelope.SendBuffer,
+                            envelope.Message.Delivery.Method,
+                            envelope.Message.Delivery.Channel);
+                        if (result == NetSendResult.Dropped || result == NetSendResult.FailedNotConnected)
+                            Log.Error("Message was not send, result: " + result);
+                        break;
                     }
+                    else
+                        await Task.Delay(1);
                 }
             }
             catch (Exception ex)
@@ -325,31 +316,45 @@ namespace Wob.Server.Network
         } 
         #endregion
 
-        private CommandSerializer GetSerializer()
+        private void SetupSecurity(IPAddress local, int port)
         {
-            CommandSerializer result;
-            if(!_serializers.TryTake(out result))
-                result = new CommandSerializer();
-
-            return result;
+            _securitySocket = new TcpListener(local, port);
+            _securitySocket.Start();
+            Task.Run(() => ProcessSecurity());
         }
 
-        private void PutSerializer(CommandSerializer serializer)
+        private async void ProcessSecurity()
         {
-            _serializers.Add(serializer);
+            while (!_isStopping)
+            {
+                var newClient = await _securitySocket.AcceptTcpClientAsync();
+                var result = await newClient.Client.SendTaskAsync(System.Text.Encoding.ASCII.GetBytes(SocketPolicy));
+
+                Log.Debug("Socket security sended to {0}", newClient.Client.RemoteEndPoint);
+                newClient.Close();
+            }
         }
+
+        private const string SocketPolicy = @"
+<?xml version=""1.0""?>
+<cross-domain-policy>
+   <allow-access-from domain=""*"" to-ports=""9998-10001""/> 
+</cross-domain-policy>";
+        
 
         private readonly NetServer _server;
         private readonly Thread _networkWorker;
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly List<Session> _clients = new List<Session>();
+        private readonly MessageSerializer _serializer = new MessageSerializer();
 
         //Pool of message encode/decode serializers
-        private readonly ConcurrentBag<CommandSerializer> _serializers = new ConcurrentBag<CommandSerializer>();
+        //private readonly ConcurrentBag<CommandSerializer> _serializers = new ConcurrentBag<CommandSerializer>();
 
         private bool _isStopping;
         private int _errorPacketsCount;
+        private TcpListener _securitySocket;
 
         public struct Statistic
         {

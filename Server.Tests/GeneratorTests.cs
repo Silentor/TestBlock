@@ -3,8 +3,8 @@ using NUnit.Framework;
 using Silentor.TB.Common.Config;
 using Silentor.TB.Common.Maps.Blocks;
 using Silentor.TB.Common.Maps.Geometry;
-using Wob.Server.Maps;
-using Wob.Server.Maps.Generators;
+using Silentor.TB.Server.Maps;
+using Silentor.TB.Server.Maps.Generators;
 
 namespace Server.Tests
 {

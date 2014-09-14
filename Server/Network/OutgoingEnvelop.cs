@@ -1,7 +1,7 @@
 ﻿using Lidgren.Network;
 using Silentor.TB.Common.Network.Messages;
 
-namespace Wob.Server.Network
+namespace Silentor.TB.Server.Network
 {
     public class OutgoingEnvelop
     {

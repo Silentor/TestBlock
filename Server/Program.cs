@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using NLog;
-using NLog.Config;
-using NLog.Targets;
-using Silentor.FBRLogger.NLogTarget;
 using Silentor.TB.Common.Network;
 
-namespace Wob.Server
+namespace Silentor.TB.Server
 {
     class Program
     {
@@ -24,7 +20,8 @@ namespace Wob.Server
             {
                 LoggerPort = LoggerPort,
                 LoggerAddr = LoggerAddr,
-                Port = Settings.Port
+                Port = Settings.Port,
+                SecurityPort = Settings.SecurityPort,
             };
 
             var bootloader = new Bootloader(config);

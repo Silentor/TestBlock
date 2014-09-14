@@ -3,7 +3,7 @@ using Silentor.TB.Common.Maps.Blocks;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Messages;
 
-namespace Wob.Server.Maps.Generators
+namespace Silentor.TB.Server.Maps.Generators
 {
     public class Flat : ChunkGenerator
     {

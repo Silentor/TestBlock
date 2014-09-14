@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Silentor.TB.Client.Maps;
 using Silentor.TB.Common.Maps.Blocks;
 using Silentor.TB.Common.Maps.Geometry;
 
-namespace Silentor.TB.Common.Maps
+namespace Silentor.TB.Client.Maps
 {
     /// <summary>
     /// Base map properties

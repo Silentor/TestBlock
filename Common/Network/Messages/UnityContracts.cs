@@ -1,19 +1,14 @@
 ﻿using System;
-using ProtoBuf;
 
 namespace Silentor.TB.Common.Network.Messages
 {
-    [ProtoContract]
     public class ProtoVector3
     {
-        [ProtoMember(1)]
-        public float X { get; set; }
+        public float X { get; private set; }
 
-        [ProtoMember(2)]
-        public float Y { get; set; }
+        public float Y { get; private set; }
 
-        [ProtoMember(3)]
-        public float Z { get; set; }
+        public float Z { get; private set; }
 
         public ProtoVector3()
         {
@@ -35,13 +30,10 @@ namespace Silentor.TB.Common.Network.Messages
         }
     }
 
-    [ProtoContract]
     public class ProtoVector2
     {
-        [ProtoMember(1)]
         public float X { get; set; }
 
-        [ProtoMember(2)]
         public float Y { get; set; }
 
         public ProtoVector2()
@@ -60,19 +52,14 @@ namespace Silentor.TB.Common.Network.Messages
         }
     }
 
-    [ProtoContract]
     public class ProtoQuaternion
     {
-        [ProtoMember(1)]
         public float X { get; set; }
 
-        [ProtoMember(2)]
         public float Y { get; set; }
 
-        [ProtoMember(3)]
         public float Z { get; set; }
 
-        [ProtoMember(4)]
         public float W { get; set; }
 
         public ProtoQuaternion()

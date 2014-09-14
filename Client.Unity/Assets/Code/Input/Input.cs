@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Assets.Code.Config;
 using ModestTree;
 using ModestTree.Zenject;
 using NLog;
+using Silentor.TB.Client.Config;
 using Silentor.TB.Client.Input;
 using Silentor.TB.Client.Tools;
 using UnityEngine;

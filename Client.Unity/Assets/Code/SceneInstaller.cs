@@ -34,6 +34,11 @@ namespace Silentor.TB.Client
 
             _container.Bind<IInstaller>().ToSingle<InputModule>();
             _container.Bind<InputModule.Config>().To(InputSettings);
+
+#if UNITY_WEBPLAYER
+            if (!Security.PrefetchSocketPolicy(SystemSettings.ServerAddress, 9999, 1000))
+                UnityEngine.Debug.LogError("Socket security failed, probably server is down");
+#endif
         }
     }
 }

@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-//using UnityEngine;
 using Microsoft.Xna.Framework;
-using Silentor.TB.Common.Maps.Blocks;
 using Silentor.TB.Common.Maps.Geometry;
-using Wob.Server.Maps;
-using Wob.Server.Tools;
+using Silentor.TB.Server.Maps;
+using Silentor.TB.Server.Tools;
 
-namespace Wob.Server.Players
+namespace Silentor.TB.Server.Players
 {
     public interface IPlayer
     {
