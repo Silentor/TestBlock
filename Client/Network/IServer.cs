@@ -8,5 +8,10 @@
         IServerClient ClientConnection { get; }
 
         IClientServer ServerConnection { get; }
+
+        bool IsConnected { get; }
+        int RecvBytes { get; }
+        int SendBytes { get; }
+        float RTT { get; }
     }
 }
