@@ -17,6 +17,14 @@ namespace Silentor.TB.Client.Network
 {
     public class RemoteServer  : IServer, IClientServer, IServerClient
     {
+        public bool IsConnected { get { return _connection.ConnectionStatus == NetConnectionStatus.Connected; } }
+
+        public int RecvBytes { get { return _connection.ServerConnection.Statistics.ReceivedBytes; } }
+
+        public int SendBytes { get { return _connection.ServerConnection.Statistics.SentBytes; } }
+
+        public float RTT { get { return _connection.ServerConnection.AverageRoundtripTime; } }
+
         public IClientServer ServerConnection { get { return this; } }
 
         public IServerClient ClientConnection { get { return this; } }
