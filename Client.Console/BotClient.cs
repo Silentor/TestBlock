@@ -8,6 +8,7 @@ using Silentor.TB.Client.Config;
 using Silentor.TB.Client.Network;
 using Silentor.TB.Client.Tools;
 using Silentor.TB.Client.Tools;
+using Silentor.TB.Common.Maps.Chunks;
 using Silentor.TB.Common.Network.Messages;
 using UnityEngine;
 using Random = System.Random;

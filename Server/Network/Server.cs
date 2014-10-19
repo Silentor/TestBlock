@@ -101,7 +101,7 @@ namespace Silentor.TB.Server.Network
             return new Statistic(this);
         }
 
-        #region Pipeline
+        #region Dataflow Pipeline
 
         private readonly BufferBlock<NetIncomingMessage> _readToDecode = new BufferBlock<NetIncomingMessage>();
         private readonly TransformBlock<NetIncomingMessage, IncomingEnvelop> _decode;

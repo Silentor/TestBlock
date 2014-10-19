@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using Assets.Code;
@@ -21,19 +22,17 @@ namespace Silentor.TB.Client
 
         public override void InstallBindings()
         {
-            _container.Bind<IInstaller>().ToSingle<StandardUnityInstaller>();
+            Container.Bind<IInstaller>().ToSingle<SystemModule>();
+            Container.Bind<SystemModule.Config>().To(SystemSettings);
 
-            _container.Bind<IInstaller>().ToSingle<SystemModule>();
-            _container.Bind<SystemModule.Config>().To(SystemSettings);
+            Container.Bind<IInstaller>().ToSingle<GameModule>();
+            Container.Bind<GameModule.Config>().To(GameSettings);
 
-            _container.Bind<IInstaller>().ToSingle<GameModule>();
-            _container.Bind<GameModule.Config>().To(GameSettings);
+            Container.Bind<IInstaller>().ToSingle<VisualizationModule>();
+            Container.Bind<VisualizationModule.Config>().To(VisualizationSettings);
 
-            _container.Bind<IInstaller>().ToSingle<VisualizationModule>();
-            _container.Bind<VisualizationModule.Config>().To(VisualizationSettings);
-
-            _container.Bind<IInstaller>().ToSingle<InputModule>();
-            _container.Bind<InputModule.Config>().To(InputSettings);
+            Container.Bind<IInstaller>().ToSingle<InputModule>();
+            Container.Bind<InputModule.Config>().To(InputSettings);
 
 #if UNITY_WEBPLAYER
             if (!Security.PrefetchSocketPolicy(SystemSettings.ServerAddress, 9999, 1000))

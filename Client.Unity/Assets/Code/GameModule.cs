@@ -22,15 +22,15 @@ namespace Silentor.TB.Client
         {
             var mapLoadSize = Math.Min(Settings.ChunkViewRadius + 1, loginData.SimulationSize);
             var mapConfig = new MapConfig(new Bounds2i(Chunk.ToChunkPosition(loginData.Position.ToVector().ToMapPosition()), mapLoadSize));
-            _container.Bind<IMapConfig>().ToSingle(mapConfig);
+            Container.Bind<IMapConfig>().ToSingle(mapConfig);
 
             var playerConfig = new ActorConfig(loginData.Id, loginData.Position.ToVector(), loginData.Rotation.ToQuaternion());
-            _container.Bind<ActorConfig>().To(playerConfig).WhenInjectedInto<Player>();
+            Container.Bind<ActorConfig>().To(playerConfig).WhenInjectedInto<Player>();
         }
 
         public Game CreateGame()
         {
-            return _container.Resolve<Game>();
+            return Container.Resolve<Game>();
         }
 
         [Serializable]
@@ -47,24 +47,24 @@ namespace Silentor.TB.Client
 
         public override void InstallBindings()
         {
-            _container.Bind<GameModule>().To(this);
-            _container.Bind<IGameConfig>().To(Settings);
+            Container.Bind<GameModule>().To(this);
+            Container.Bind<IGameConfig>().To(Settings);
 
-            _container.Bind<Game>().ToSingle();
+            Container.Bind<Game>().ToSingle();
 
-            _container.Bind<IWorld>().ToSingle<RemoteWorld>();
-            _container.Bind<IMapLoader>().ToSingle<SimpleMapLoader>();
-            _container.Bind<IMap>().ToSingle<Map>();
-            _container.Bind<IMapEditor>().ToSingle<Map>();
+            Container.Bind<IWorld>().ToSingle<RemoteWorld>();
+            Container.Bind<IMapLoader>().ToSingle<SimpleMapLoader>();
+            Container.Bind<IMap>().ToSingle<Map>();
+            Container.Bind<IMapEditor>().ToSingle<Map>();
 
-            _container.Bind<IChunkFactory>().ToSingle<ChunkFactory>();
-            _container.Bind<IChunkStorage>().ToSingle<ChunkStorage>();
+            Container.Bind<IChunkFactory>().ToSingle<ChunkFactory>();
+            Container.Bind<IChunkStorage>().ToSingle<ChunkStorage>();
 
-            _container.Bind<IBlockSet>().ToSingle<BlockSet>();
+            Container.Bind<IBlockSet>().ToSingle<BlockSet>();
 
-            _container.Bind<IPlayer>().ToSingle<Player>();
+            Container.Bind<IPlayer>().ToSingle<Player>();
             //_container.Bind<IEnemy>().ToTransient<Enemy>();
-            _container.Bind<IEnemyFactory>().ToSingle<EnemyFactory>();
+            Container.Bind<IEnemyFactory>().ToSingle<EnemyFactory>();
         }
     }
 }

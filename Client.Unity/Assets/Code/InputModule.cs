@@ -24,8 +24,8 @@ namespace Silentor.TB.Client
 
         public override void InstallBindings()
         {
-            _container.Bind<IInput>().ToSingle<Input.Input>();
-            _container.Bind<IInputConfig>().To(Settings);
+            Container.Bind<IInput>().ToSingle<Input.Input>();
+            Container.Bind<IInputConfig>().To(Settings);
         }
     }
 }

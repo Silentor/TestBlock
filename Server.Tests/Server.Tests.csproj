@@ -32,8 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FBRLogger.NLogTarget">
-      <HintPath>..\Client\Assets\Tools\FBRLogger\FBRLogger.NLogTarget.dll</HintPath>
+    <Reference Include="FBRLogger">
+      <HintPath>..\Client.Unity\Assets\Tools\FBRLogger\FBRLogger.dll</HintPath>
+    </Reference>
+    <Reference Include="FBRLogger.NLogTarget, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Client.Unity\Assets\Tools\FBRLogger\FBRLogger.NLogTarget.dll</HintPath>
     </Reference>
     <Reference Include="FluentAssertions, Version=3.2.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -12,17 +12,16 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
-    <BaseIntermediateOutputPath>..\..\..\Temp\client.core.obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Client.Unity\Assets\Libs.Ext\Client.Core\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>C:\Users\Silentor\Documents\Projects\TestBlock\Client.Unity\Assets\Libs.Ext\Client.Core\Client.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Client.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
@@ -37,16 +36,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FBRLogger">
-      <HintPath>..\Client.Unity\Assets\Tools\FBRLogger\FBRLogger.dll</HintPath>
+      <HintPath>..\Libs\Common\FBRLogger\FBRLogger.dll</HintPath>
     </Reference>
     <Reference Include="FBRLogger.NLogTarget">
-      <HintPath>..\Client.Unity\Assets\Tools\FBRLogger\FBRLogger.NLogTarget.dll</HintPath>
+      <HintPath>..\Libs\Common\FBRLogger\FBRLogger.NLogTarget.dll</HintPath>
     </Reference>
     <Reference Include="Lidgren.Network">
-      <HintPath>..\Client.Unity\Assets\Tools\Lidgren\Lidgren.Network.dll</HintPath>
+      <HintPath>..\Libs\Client\Lidgren\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="NLog">
-      <HintPath>..\Client.Unity\Assets\Tools\NLog\NLog.dll</HintPath>
+      <HintPath>..\Libs\Client\NLog\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -106,18 +105,26 @@
     <Compile Include="Visualization\IActorVisualizer.cs" />
     <Compile Include="Visualization\IMapVisualizer.cs" />
   </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{75a505a4-1cf6-4469-a7d3-0e204ab3c9f3}</Project>
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <!--<Target Name="BeforeBuild">
+  </Target>-->
+  <Target Name="AfterBuild" DependsOnTargets="ProcessClientTargets">
   </Target>
-  <Target Name="AfterBuild">
+  <!--Process Unity client app targets. Because Unity recreates project constantly 
+  so targets in Unity project will be lost-->
+  <Target Name="ProcessClientTargets">
+    <!-- Collect targets -->
+    <ItemGroup>
+      <ClientTargets Include="..\*\Client.targets" />
+    </ItemGroup>
+    <!--Call client targets-->
+    <MSBuild Projects="@(ClientTargets)" Properties="ClientCoreOutputPath=$(MSBuildProjectDirectory)\$(OutputPath)"/>
+    <Message Text="Processed client targets" Importance="high" />
   </Target>
-  -->
 </Project>

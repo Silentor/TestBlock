@@ -38,24 +38,24 @@ namespace Silentor.TB.Client
 
         public override void InstallBindings()
         {
-            _container.Bind<IClientApp>().ToSingle<UnityApp>();
+            Container.Bind<IClientApp>().ToSingle<UnityApp>();
 
             //Map visualization
-            _container.Bind<IBlocksAtlas>().ToSingle(Settings.Blocks);
-            _container.Bind<IBlockMeshers>().ToSingle<BlockMeshers>();
-            _container.Bind<SimplestChunkletMesher>().ToSingle();
-            _container.Bind<IChunkletViewFactory>().ToSingle<ChunkletViewFactory>();
-            _container.Bind<IMapVisualizer>().ToSingle<SimpleMapVisualizer>();
-            _container.Bind<IChunkletMesher>().ToSingle<SimplestChunkletMesher>();
+            Container.Bind<IBlocksAtlas>().ToSingle(Settings.Blocks);
+            Container.Bind<IBlockMeshers>().ToSingle<BlockMeshers>();
+            Container.Bind<SimplestChunkletMesher>().ToSingle();
+            Container.Bind<IChunkletViewFactory>().ToSingle<ChunkletViewFactory>();
+            Container.Bind<IMapVisualizer>().ToSingle<SimpleMapVisualizer>();
+            Container.Bind<IChunkletMesher>().ToSingle<SimplestChunkletMesher>();
 
             //Actors visualization
-            _container.Bind<IActorVisualizer>().ToSingle<SimpleActorVisualizator>();
-            _container.Bind<TestPlayerView>().ToSingleFromPrefab<TestPlayerView>(Settings.PlayerPrefab.gameObject);
-            _container.Bind<TestEnemyView>().ToTransientFromPrefab<TestEnemyView>(Settings.EnemyPrefab.gameObject);
-            _container.Bind<IEnemyViewFactory>().ToSingle<EnemyViewFactory>();
+            Container.Bind<IActorVisualizer>().ToSingle<SimpleActorVisualizator>();
+            Container.Bind<TestPlayerView>().ToSingleFromPrefab<TestPlayerView>(Settings.PlayerPrefab.gameObject);
+            Container.Bind<TestEnemyView>().ToTransientFromPrefab<TestEnemyView>(Settings.EnemyPrefab.gameObject);
+            Container.Bind<IEnemyViewFactory>().ToSingle<EnemyViewFactory>();
 
             //Map holder GO
-            _container.Bind<MapGizmos>().ToSingleGameObject("Map");
+            Container.Bind<MapGizmos>().ToSingleGameObject("Map");
         }
     }
 }

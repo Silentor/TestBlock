@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using NLog;
+using Silentor.TB.Common.Maps.Chunks;
 using Silentor.TB.Common.Network.Messages;
 using Silentor.TB.Common.Network.Serialization;
 using Silentor.TB.Common.Tools;
@@ -77,7 +78,7 @@ namespace Silentor.TB.Server.Network
         /// <param name="chunkData"></param>
         public void SendChunk(ChunkContents chunkData)
         {
-            _server.Send(chunkData, this);
+            _server.Send(new ChunkMessage(chunkData), this);
             Log.Info("<-... Send chunk {0}", chunkData.Position);
         }
 

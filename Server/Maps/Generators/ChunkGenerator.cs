@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using NLog;
 using Silentor.TB.Common.Config;
+using Silentor.TB.Common.Maps.Chunks;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Messages;
 

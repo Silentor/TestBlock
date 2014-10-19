@@ -10,7 +10,7 @@ namespace Silentor.TB.Client
     /// <summary>
     /// Start game when login was successful
     /// </summary>
-    public class GameRoot : IDependencyRoot
+    public class GameRoot : IInitializable
     {
         [Inject]
         public Logging Logging;
@@ -21,14 +21,13 @@ namespace Silentor.TB.Client
         [Inject]
         public GameModule GameModule;
 
-        private Game _game;
-
-        public void Start()
+        public void Initialize()
         {
-            //Login
             Server.ClientConnection.Connected += ClientConnectionOnConnected;
             Server.ClientConnection.Logined += ClientConnectionOnLogined;
         }
+
+        private Game _game;
 
         private void ClientConnectionOnConnected()
         {
@@ -39,13 +38,9 @@ namespace Silentor.TB.Client
         {
             GameModule.RegisterGameSettings(loginResponce);
 
-            //True game root
+            //True game root resolved and started after login 
+            //todo connect to server and login should be processed in another (login) scene
             _game = GameModule.CreateGame();
-        }
-
-        public void Dispose()
-        {
-            
         }
     }
 }

@@ -31,15 +31,15 @@ namespace Silentor.TB.Client
 
         public override void InstallBindings()
         {
-            _container.Bind<IDependencyRoot>().ToSingle<GameRoot>();
+            Container.Bind<IInitializable>().ToSingle<GameRoot>();
 
-            _container.Bind<ISystemConfig>().To(Settings);
+            Container.Bind<ISystemConfig>().To(Settings);
 
-            _container.Bind<Logging>().ToSingle();
+            Container.Bind<Logging>().ToSingle();
 
-            _container.Bind<IApplicationEvents>().To(Settings.ApplicationEvents);
+            Container.Bind<IApplicationEvents>().To(Settings.ApplicationEvents);
 
-            _container.Bind<IServer>().ToSingle<RemoteServer>();
+            Container.Bind<IServer>().ToSingle<RemoteServer>();
         }
         
     }

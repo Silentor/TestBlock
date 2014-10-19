@@ -14,10 +14,12 @@ namespace Silentor.TB.Common.Network.Messages
         /// <summary>
         /// Deserialization
         /// </summary>
-        internal ChunkRequestMessage()
+        internal ChunkRequestMessage(NetBuffer buffer)
         {
-            
+            Position = buffer.ReadVector2i();
         }
+
+        public Vector2i Position { get; private set; }
 
         [Header(Headers.GetChunk)]
         public override Headers Header
@@ -25,20 +27,16 @@ namespace Silentor.TB.Common.Network.Messages
             get { return Headers.GetChunk; }
         }
 
-        public Vector2i Position { get; private set; }
+        public override int Size
+        {
+            get { return 1 + 8; }
+        }
 
         public override void Serialize(NetBuffer buffer)
         {
-            base.Serialize(buffer);
+            base.Serialize(buffer);             //1
 
-            buffer.Write(Position);
-        }
-
-        public override void Deserialize(NetBuffer buffer)
-        {
-            base.Deserialize(buffer);
-
-            Position = buffer.ReadVector2i();
+            buffer.Write(Position);             //8
         }
     }
 }

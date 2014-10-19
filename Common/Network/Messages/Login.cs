@@ -1,4 +1,6 @@
 using System;
+using System.Text;
+using JetBrains.Annotations;
 using Lidgren.Network;
 using Silentor.TB.Common.Network.Serialization;
 
@@ -7,51 +9,45 @@ namespace Silentor.TB.Common.Network.Messages
     //C2S, causes hero creation in world
     public class LoginData : PlayerManagement
     {
-        [Header(Headers.Login)]
-        public override Headers Header
+        public LoginData([NotNull] string name)
         {
-            get { return Headers.Login; }
-        }
+            if (name == null) throw new ArgumentNullException("name");
 
-        public LoginData(string name)
-        {
             Name = name;
         }
 
         /// <summary>
         /// Deserialization
         /// </summary>
-        internal LoginData()
+        internal LoginData(NetBuffer buffer)
         {
-
+            Name = buffer.ReadString();
         }
 
         public String Name { get; private set; }
 
-        public override void Serialize(NetBuffer buffer)
+        [Header(Headers.Login)]
+        public override Headers Header
         {
-            base.Serialize(buffer);
-
-            buffer.Write(Name);
+            get { return Headers.Login; }
         }
 
-        public override void Deserialize(NetBuffer buffer)
+        public override int Size
         {
-            base.Deserialize(buffer);
+            get { return 1 + Encoding.UTF8.GetByteCount(Name); }
+        }
 
-            Name = buffer.ReadString();
+        public override void Serialize(NetBuffer buffer)
+        {
+            base.Serialize(buffer);                 //1
+
+            buffer.Write(Name);                     //?
         }
     }
 
     //S2C, simulated hero created, player can play
     public class LoginResponce : PlayerManagement
     {
-        [Header(Headers.LoginResponce)]
-        public override Headers Header
-        {
-            get { return Headers.LoginResponce; }
-        }
-
         public LoginResponce(int id, ProtoVector3 position, ProtoQuaternion rotation, int simulationSize)
         {
             Id = id;
@@ -63,37 +59,53 @@ namespace Silentor.TB.Common.Network.Messages
                 /// <summary>
         /// Deserialization
         /// </summary>
-        internal LoginResponce()
+        internal LoginResponce(NetBuffer buffer)
         {
-
-        }
-
-        public int Id { get; private set; }
-
-        public ProtoVector3 Position { get; private set; }
-
-        public ProtoQuaternion Rotation { get; private set; }
-
-        public int SimulationSize { get; private set; }
-
-        public override void Serialize(NetBuffer buffer)
-        {
-            base.Serialize(buffer);
-
-            buffer.Write(Id);
-            buffer.Write(Position);
-            buffer.Write(Rotation);
-            buffer.Write(SimulationSize);
-        }
-
-        public override void Deserialize(NetBuffer buffer)
-        {
-            base.Deserialize(buffer);
-
             Id = buffer.ReadInt32();
             Position = buffer.ReadVector3();
             Rotation = buffer.ReadQuaternion();
             SimulationSize = buffer.ReadInt32();
+        }
+
+        /// <summary>
+        /// Id of player
+        /// </summary>
+        public int Id { get; private set; }
+
+        /// <summary>
+        /// Start position of player
+        /// </summary>
+        public ProtoVector3 Position { get; private set; }
+
+        /// <summary>
+        /// Start rotation of player
+        /// </summary>
+        public ProtoQuaternion Rotation { get; private set; }
+
+        /// <summary>
+        /// Allowed size of Map around player
+        /// </summary>
+        public int SimulationSize { get; private set; }
+
+        [Header(Headers.LoginResponce)]
+        public override Headers Header
+        {
+            get { return Headers.LoginResponce; }
+        }
+
+        public override int Size
+        {
+            get { return 1 + 4 + 12 + 16 + 4; }
+        }
+
+        public override void Serialize(NetBuffer buffer)
+        {
+            base.Serialize(buffer);                 //1
+
+            buffer.Write(Id);                       //4 
+            buffer.Write(Position);                 //12
+            buffer.Write(Rotation);                 //16
+            buffer.Write(SimulationSize);           //4
         }
     }
 
@@ -104,6 +116,11 @@ namespace Silentor.TB.Common.Network.Messages
         public override Headers Header
         {
             get { return Headers.Disconnect; }
+        }
+
+        public override int Size
+        {
+            get { return 1; }
         }
     }
 }

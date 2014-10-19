@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Silentor.TB.Common.Maps.Chunks;
 using Silentor.TB.Common.Maps.Geometry;
-using Silentor.TB.Common.Network.Messages;
 
 namespace Silentor.TB.Server.Maps.Generators
 {

@@ -1,6 +1,7 @@
 ﻿using ModestTree.Zenject;
 using Silentor.TB.Client.Maps;
 using Silentor.TB.Common.Maps;
+using Silentor.TB.Common.Maps.Chunks;
 using Silentor.TB.Common.Network.Messages;
 
 namespace Silentor.TB.Client.Maps

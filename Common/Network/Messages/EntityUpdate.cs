@@ -16,15 +16,12 @@ namespace Silentor.TB.Common.Network.Messages
         /// <summary>
         /// Deserialization
         /// </summary>
-        internal EntityUpdate()
+        internal EntityUpdate(NetBuffer buffer)
         {
-            
-        }
-
-        [Header(Headers.EntityUpdate)]
-        public override Headers Header
-        {
-            get { return Headers.EntityUpdate; }
+            Id = buffer.ReadInt32();
+            Position = buffer.ReadVector3();
+            Rotation = buffer.ReadQuaternion();
+            IsRemoved = buffer.ReadBoolean();
         }
 
         public int Id { get; private set; }
@@ -33,26 +30,29 @@ namespace Silentor.TB.Common.Network.Messages
 
         public ProtoQuaternion Rotation { get; private set; }
 
-        public bool IsRemoved { get; private set; }         //True if entity is dissapeared from vision
+        public bool IsRemoved { get; private set; }
+
+        [Header(Headers.EntityUpdate)]
+        public override Headers Header
+        {
+            get { return Headers.EntityUpdate; }
+        }
+
+        public override int Size
+        {
+            get { return 1 + 4 + 12 + 16 + 1; }
+        }
+
+        //True if entity is dissapeared from vision
 
         public override void Serialize(NetBuffer buffer)
         {
-            base.Serialize(buffer);
+            base.Serialize(buffer);             //1
 
-            buffer.Write(Id);
-            buffer.Write(Position);
-            buffer.Write(Rotation);
-            buffer.Write(IsRemoved);
-        }
-
-        public override void Deserialize(NetBuffer buffer)
-        {
-            base.Deserialize(buffer);
-
-            Id = buffer.ReadInt32();
-            Position = buffer.ReadVector3();
-            Rotation = buffer.ReadQuaternion();
-            IsRemoved = buffer.ReadBoolean();
+            buffer.Write(Id);                   //4 
+            buffer.Write(Position);             //12
+            buffer.Write(Rotation);             //16
+            buffer.Write(IsRemoved);            //1
         }
 
         public override string ToString()

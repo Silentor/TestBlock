@@ -14,7 +14,7 @@ namespace Silentor.TB.Server
     /// </summary>
     public class World
     {
-        private readonly Silentor.TB.Server.Network.Server _server;
+        private readonly Network.Server _server;
         private readonly Globe _globe;
         private readonly Time.Timer _timer;
 

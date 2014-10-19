@@ -6,31 +6,40 @@ using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Serialization;
 using System.Text;
+using JetBrains.Annotations;
 using Lidgren.Network;
 using NLog;
 using Silentor.TB.Common.Network.Messages;
 
 namespace Silentor.TB.Common.Network.Serialization
 {
+    /// <summary>
+    /// Converts buffer of bytes to message
+    /// </summary>
     public class MessageSerializer
     {
-        public MessageSerializer(Func<NetBuffer> bufferPool = null)
+        public MessageSerializer(Func<NetBuffer> bufferGenerator = null, Action<NetBuffer> bufferDisposer = null)
         {
-            _bufferPool = bufferPool;
+            _bufferGenerator = bufferGenerator;
+            _bufferDisposer = bufferDisposer;
         }
 
+        /// <summary>
+        /// Used to add custom messages from not current assembly
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="header"></param>
         public void AddMessageHeader<T>(Headers header) where T : Message
         {
             _messages[header] = typeof (T);
         }
 
-        public void Serialize(Message message, NetBuffer buffer)
-        {
-            if (!_messagesCollected) ReflectMessagesHeaders();
-
-            message.Serialize(buffer);
-        }
-
+        /// <summary>
+        /// Serialize 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public byte[] Serialize(Message message, out int length)
         {
             var netBuffer = GetBuffer();
@@ -55,9 +64,10 @@ namespace Silentor.TB.Common.Network.Serialization
             Type messageType;
             if (_messages.TryGetValue(header, out messageType))
             {
-                //var cons = messageType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic);
-                var message = (Message)Activator.CreateInstance(messageType, true);
-                message.Deserialize(buffer);
+                var constructor = messageType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public, null, 
+                    new[]{typeof(NetBuffer)}, null);
+                var message = (Message)constructor.Invoke(new[] {(Object)buffer});
+                //var message = (Message)Activator.CreateInstance(messageType, true, buffer);
                 return message;
             }
             else throw new SerializationException(string.Format("There is no message for header {0}", header));
@@ -70,11 +80,22 @@ namespace Silentor.TB.Common.Network.Serialization
             return Deserialize(netBuffer);
         }
 
-        private readonly Func<NetBuffer> _bufferPool;
+        private readonly Func<NetBuffer> _bufferGenerator;
+        private readonly Action<NetBuffer> _bufferDisposer;
         private readonly Dictionary<Headers, Type> _messages = new Dictionary<Headers, Type>();
         private bool _messagesCollected;
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
+        private void Serialize(Message message, NetBuffer buffer)
+        {
+            if (!_messagesCollected) ReflectMessagesHeaders();
+
+            message.Serialize(buffer);
+        }
+
+        /// <summary>
+        /// Find all messages in current assembly
+        /// </summary>
         private void ReflectMessagesHeaders()
         {
             _messagesCollected = true;
@@ -98,10 +119,18 @@ namespace Silentor.TB.Common.Network.Serialization
 
         private NetBuffer GetBuffer()
         {
-            if (_bufferPool != null)
-                return _bufferPool();
+            if (_bufferGenerator != null)
+                return _bufferGenerator();
             else
                 return new NetBuffer();
+        }
+
+        private void DisposeBuffer([NotNull] NetBuffer bufferToDispose)
+        {
+            if (bufferToDispose == null) throw new ArgumentNullException("bufferToDispose");
+
+            if (_bufferDisposer != null)
+                _bufferDisposer(bufferToDispose);
         }
     }
 }

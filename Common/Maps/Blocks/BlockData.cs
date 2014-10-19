@@ -4,7 +4,12 @@ namespace Silentor.TB.Common.Maps.Blocks
 {
     public struct BlockData
     {
+        #region Block data
+
+        public byte Id { get { return _blockId; } }
         public byte Data;
+
+        #endregion
 
         /// <summary>
         /// Is block need rendering
@@ -25,8 +30,6 @@ namespace Silentor.TB.Common.Maps.Blocks
         public bool IsEmpty { get { return _blockId == BlockSet.AirID; } }
 
         public bool IsNull { get { return _blockId == BlockSet.NullID; } }
-
-        public byte Id { get { return _blockId; } }
 
         public BlockData(Block block, byte data = 0)
         {

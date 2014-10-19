@@ -16,15 +16,11 @@ namespace Silentor.TB.Common.Network.Messages
         /// <summary>
         /// Deserialization
         /// </summary>
-        internal PlayerMovement()
+        internal PlayerMovement(NetBuffer buffer)
         {
-            
-        }
-
-        [Header(Headers.PlayerMovement)]
-        public override Headers Header
-        {
-            get { return Headers.PlayerMovement; }
+            Movement = buffer.ReadVector3();
+            Rotation = buffer.ReadVector2();
+            Jump = buffer.ReadBoolean();
         }
 
         public ProtoVector3 Movement { get; private set; }
@@ -33,22 +29,24 @@ namespace Silentor.TB.Common.Network.Messages
 
         public bool Jump { get; private set; }
 
-        public override void Serialize(NetBuffer buffer)
+        [Header(Headers.PlayerMovement)]
+        public override Headers Header
         {
-            base.Serialize(buffer);
-
-            buffer.Write(Movement);
-            buffer.Write(Rotation);
-            buffer.Write(Jump);
+            get { return Headers.PlayerMovement; }
         }
 
-        public override void Deserialize(NetBuffer buffer)
+        public override int Size
         {
-            base.Deserialize(buffer);
+            get { return 1 + 12 + 16 + 1; }
+        }
 
-            Movement = buffer.ReadVector3();
-            Rotation = buffer.ReadVector2();
-            Jump = buffer.ReadBoolean();
+        public override void Serialize(NetBuffer buffer)
+        {
+            base.Serialize(buffer);             //1
+
+            buffer.Write(Movement);             //12
+            buffer.Write(Rotation);             //16
+            buffer.Write(Jump);                 //1
         }
 
         public override string ToString()

@@ -4,6 +4,7 @@ using System.Linq;
 using NLog;
 using Silentor.TB.Client.Config;
 using Silentor.TB.Client.Tools;
+using Silentor.TB.Common.Maps.Chunks;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Serialization;
 using Silentor.TB.Common.Network.Messages;
@@ -80,17 +81,19 @@ namespace Silentor.TB.Client.Storage
 
         private void RetrieveAsync(StoredChunk storedChunk)
         {
-            var chunkContent = (ChunkContents)_serializer.Deserialize(storedChunk.PackedChunk);
-            Log.Trace("Retrieved chunk content {0}", chunkContent.Position);
+            var chunkMessage = (ChunkMessage)_serializer.Deserialize(storedChunk.PackedChunk);
+            Log.Trace("Retrieved chunk content {0}", chunkMessage.Position);
 
-            DoRetrieved(chunkContent);
+            var chunk = new ChunkContents(chunkMessage.Position, chunkMessage.Blocks, chunkMessage.HeightMap);
+            DoRetrieved(chunk);
         }
 
         private void StoreAsync(ChunkContents chunkContents)
         {
             //Prepare data
             int length;
-            var data = _serializer.Serialize(chunkContents, out length);
+            var chunkMessage = new ChunkMessage(chunkContents);
+            var data = _serializer.Serialize(chunkMessage, out length);
             if (data.Length != length)
             {
                 var trimmed = new byte[length];

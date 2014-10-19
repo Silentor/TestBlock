@@ -1,0 +1,45 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="CopyLibsToUnityAssets">
+
+  <PropertyGroup>
+    <ThirdPartyClientLibsSource>$(MSBuildProjectDirectory)\..\Libs\Client</ThirdPartyClientLibsSource>
+    <ThirdPartyClientLibsDest>$(MSBuildProjectDirectory)\Assets\Libs\ThirdParty</ThirdPartyClientLibsDest>
+    <ThirdPartyCommonLibsSource>$(MSBuildProjectDirectory)\..\Libs\Common</ThirdPartyCommonLibsSource>
+    <ThirdPartyCommonLibsDest>$(MSBuildProjectDirectory)\Assets\Libs\ThirdParty</ThirdPartyCommonLibsDest>
+    <ClientCoreDest>$(MSBuildProjectDirectory)\Assets\Libs\Solution\Client.Core</ClientCoreDest>
+    <!--External property ClientCoreOutputPath from Client core project-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ThirdPartyClientLibsSourceFiles Include="$(ThirdPartyClientLibsSource)\**\*.*" />
+    <ThirdPartyClientLibsDestFiles Include="@(ThirdPartyClientLibsSourceFiles->'$(ThirdPartyClientLibsDest)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <ThirdPartyCommonLibsSourceFiles Include="$(ThirdPartyCommonLibsSource)\**\*.*" />
+    <ThirdPartyCommonLibsDestFiles Include="@(ThirdPartyCommonLibsSourceFiles->'$(ThirdPartyCommonLibsDest)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <ClientCoreSourceFiles Include="$(ClientCoreOutputPath)*.*" />
+    <ClientCoreDestFiles Include="@(ClientCoreSourceFiles->'$(ClientCoreDest)\%(Filename)%(Extension)')" />
+  </ItemGroup>
+
+  <!--Incremental build feature for this target is not working :( -->
+  <Target Name = "CopyLibsToUnityAssets"
+          Inputs="@(ThirdPartyClientLibsSourceFiles);@(ThirdPartyCommonLibsSourceFiles);@(ClientCoreSourceFiles)"
+          Outputs="@(ThirdPartyClientLibsDestFiles);@(ThirdPartyCommonLibsDestFiles);@(ClientCoreDestFiles)">
+
+    <!--Copy client specific libs-->
+    <Copy SourceFiles="@(ThirdPartyClientLibsSourceFiles)"
+          DestinationFiles="@(ThirdPartyClientLibsDestFiles)"
+          SkipUnchangedFiles="true" />
+
+    <!--Copy common libs-->
+    <Copy SourceFiles="@(ThirdPartyCommonLibsSourceFiles)"
+          DestinationFiles="@(ThirdPartyCommonLibsDestFiles)"
+          SkipUnchangedFiles="true" />
+
+    <!--Copy client core binaries-->
+    <Copy SourceFiles="@(ClientCoreSourceFiles)"
+          DestinationFiles="@(ClientCoreDestFiles)"
+          SkipUnchangedFiles="true" />
+
+    <Message Text="Unity client third-party libs updated" Importance="high"/>
+
+  </Target>
+
+</Project>

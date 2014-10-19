@@ -5,6 +5,7 @@ using Silentor.TB.Client.Maps;
 using Silentor.TB.Client.Storage;
 using Silentor.TB.Client.Tests.Support;
 using Silentor.TB.Common.Maps.Blocks;
+using Silentor.TB.Common.Maps.Chunks;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Messages;
 

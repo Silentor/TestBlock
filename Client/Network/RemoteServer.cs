@@ -6,6 +6,7 @@ using NLog;
 using Silentor.TB.Client.Config;
 using Silentor.TB.Client.Tools;
 using Silentor.TB.Client.Tools;
+using Silentor.TB.Common.Maps.Chunks;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network;
 using Silentor.TB.Common.Network.Messages;
@@ -265,8 +266,9 @@ namespace Silentor.TB.Client.Network
                     break;
 
                 case Headers.ChunkResponce:
-                    var chunkData = (ChunkContents)message;
-                    DoChunkReceived(chunkData);
+                    var chunkData = (ChunkMessage)message;
+                    var chunkContent = new ChunkContents(chunkData.Position, chunkData.Blocks, chunkData.HeightMap);
+                    DoChunkReceived(chunkContent);
                     break;
 
                 case Headers.EntityUpdate:

@@ -8,12 +8,15 @@ namespace Silentor.TB.Server
     class Program
     {
         private const string LoggerAddr = "192.168.0.100";
+
         private const int LoggerPort = 9998;
+
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledException_Handler;
+
             Console.WriteLine("Starting server...");
 
             var config = new Bootloader.Config()

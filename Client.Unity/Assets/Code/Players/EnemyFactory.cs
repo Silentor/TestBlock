@@ -11,7 +11,7 @@ namespace Silentor.TB.Client.Players
         public EnemyFactory(DiContainer container)
         {
             _container = container;
-            _factory = new Factory<Enemy>(_container);
+            _factory = new Factory<Enemy>();
         }
 
         public IActorEditor Create(ActorConfig config)

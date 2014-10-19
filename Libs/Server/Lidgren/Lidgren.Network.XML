@@ -4,49 +4,29 @@
         <name>Lidgren.Network</name>
     </assembly>
     <members>
-        <member name="T:Lidgren.Network.INetEncryption">
+        <member name="T:Lidgren.Network.NetEncryption">
             <summary>
             Interface for an encryption algorithm
             </summary>
         </member>
-        <member name="M:Lidgren.Network.INetEncryption.Encrypt(Lidgren.Network.NetOutgoingMessage)">
+        <member name="F:Lidgren.Network.NetEncryption.m_peer">
+            <summary>
+            NetPeer
+            </summary>
+        </member>
+        <member name="M:Lidgren.Network.NetEncryption.#ctor(Lidgren.Network.NetPeer)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:Lidgren.Network.NetEncryption.Encrypt(Lidgren.Network.NetOutgoingMessage)">
             <summary>
             Encrypt an outgoing message in place
             </summary>
         </member>
-        <member name="M:Lidgren.Network.INetEncryption.Decrypt(Lidgren.Network.NetIncomingMessage)">
+        <member name="M:Lidgren.Network.NetEncryption.Decrypt(Lidgren.Network.NetIncomingMessage)">
             <summary>
             Decrypt an incoming message in place
-            </summary>
-        </member>
-        <member name="T:Lidgren.Network.NetAESEncryption">
-            <summary>
-            AES encryption
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetAESEncryption.#ctor(System.Byte[],System.Byte[])">
-            <summary>
-            NetAESEncryption constructor
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetAESEncryption.#ctor(System.String,System.Int32)">
-            <summary>
-            NetAESEncryption constructor
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetAESEncryption.#ctor(System.String)">
-            <summary>
-            NetAESEncryption constructor
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetAESEncryption.Encrypt(Lidgren.Network.NetOutgoingMessage)">
-            <summary>
-            Encrypt outgoing message
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetAESEncryption.Decrypt(Lidgren.Network.NetIncomingMessage)">
-            <summary>
-            Decrypt incoming message
             </summary>
         </member>
         <member name="T:Lidgren.Network.NetBlockEncryptionBase">
@@ -54,7 +34,7 @@
             Base for a non-threadsafe encryption class
             </summary>
         </member>
-        <member name="M:Lidgren.Network.NetBlockEncryptionBase.#ctor">
+        <member name="M:Lidgren.Network.NetBlockEncryptionBase.#ctor(Lidgren.Network.NetPeer)">
             <summary>
             NetBlockEncryptionBase constructor
             </summary>
@@ -86,108 +66,17 @@
             Block size in bytes for this cipher
             </summary>
         </member>
-        <member name="T:Lidgren.Network.NetDESEncryption">
-            <summary>
-            DES encryption
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetDESEncryption.#ctor(System.Byte[],System.Byte[])">
-            <summary>
-            NetDESEncryption constructor
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetDESEncryption.#ctor(System.String,System.Int32)">
-            <summary>
-            NetDESEncryption constructor
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetDESEncryption.#ctor(System.String)">
-            <summary>
-            NetDESEncryption constructor
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetDESEncryption.Encrypt(Lidgren.Network.NetOutgoingMessage)">
-            <summary>
-            Encrypt outgoing message
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetDESEncryption.Decrypt(Lidgren.Network.NetIncomingMessage)">
-            <summary>
-            Decrypt incoming message
-            </summary>
-        </member>
-        <member name="T:Lidgren.Network.NetRC2Encryption">
-            <summary>
-            RC2 encryption
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetRC2Encryption.#ctor(System.Byte[],System.Byte[])">
-            <summary>
-            NetRC2Encryption constructor
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetRC2Encryption.#ctor(System.String,System.Int32)">
-            <summary>
-            NetRC2Encryption constructor
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetRC2Encryption.#ctor(System.String)">
-            <summary>
-            NetRC2Encryption constructor
-            </summary>
-            <param name="key"></param>
-        </member>
-        <member name="M:Lidgren.Network.NetRC2Encryption.Encrypt(Lidgren.Network.NetOutgoingMessage)">
-            <summary>
-            Encrypt outgoing message
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetRC2Encryption.Decrypt(Lidgren.Network.NetIncomingMessage)">
-            <summary>
-            Decrypt incoming message
-            </summary>
-        </member>
-        <member name="T:Lidgren.Network.NetTripleDESEncryption">
-            <summary>
-            Triple DES encryption
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetTripleDESEncryption.#ctor(System.Byte[],System.Byte[])">
-            <summary>
-            NetTriplsDESEncryption constructor
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetTripleDESEncryption.#ctor(System.String,System.Int32)">
-            <summary>
-            NetTriplsDESEncryption constructor
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetTripleDESEncryption.#ctor(System.String)">
-            <summary>
-            NetTriplsDESEncryption constructor
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetTripleDESEncryption.Encrypt(Lidgren.Network.NetOutgoingMessage)">
-            <summary>
-            Encrypt outgoing message
-            </summary>
-        </member>
-        <member name="M:Lidgren.Network.NetTripleDESEncryption.Decrypt(Lidgren.Network.NetIncomingMessage)">
-            <summary>
-            Decrypt incoming message
-            </summary>
-        </member>
         <member name="T:Lidgren.Network.NetXorEncryption">
             <summary>
             Example class; not very good encryption
             </summary>
         </member>
-        <member name="M:Lidgren.Network.NetXorEncryption.#ctor(System.Byte[])">
+        <member name="M:Lidgren.Network.NetXorEncryption.#ctor(Lidgren.Network.NetPeer,System.Byte[])">
             <summary>
             NetXorEncryption constructor
             </summary>
         </member>
-        <member name="M:Lidgren.Network.NetXorEncryption.#ctor(System.String)">
+        <member name="M:Lidgren.Network.NetXorEncryption.#ctor(Lidgren.Network.NetPeer,System.String)">
             <summary>
             NetXorEncryption constructor
             </summary>
@@ -207,17 +96,17 @@
             Methods to encrypt and decrypt data using the XTEA algorithm
             </summary>
         </member>
-        <member name="M:Lidgren.Network.NetXtea.#ctor(System.Byte[],System.Int32)">
+        <member name="M:Lidgren.Network.NetXtea.#ctor(Lidgren.Network.NetPeer,System.Byte[],System.Int32)">
             <summary>
             16 byte key
             </summary>
         </member>
-        <member name="M:Lidgren.Network.NetXtea.#ctor(System.Byte[])">
+        <member name="M:Lidgren.Network.NetXtea.#ctor(Lidgren.Network.NetPeer,System.Byte[])">
             <summary>
             16 byte key
             </summary>
         </member>
-        <member name="M:Lidgren.Network.NetXtea.#ctor(System.String)">
+        <member name="M:Lidgren.Network.NetXtea.#ctor(Lidgren.Network.NetPeer,System.String)">
             <summary>
             String to hash for key
             </summary>
@@ -1420,6 +1309,11 @@
             Time offset between this peer and the remote peer
             </summary>
         </member>
+        <member name="P:Lidgren.Network.NetConnection.CurrentMTU">
+            <summary>
+            Gets the current MTU in bytes. If PeerConfiguration.AutoExpandMTU is false, this will be PeerConfiguration.MaximumTransmissionUnit.
+            </summary>
+        </member>
         <member name="T:Lidgren.Network.NetConnectionStatistics">
             <summary>
             Statistics for a NetConnection instance
@@ -1585,7 +1479,7 @@
             Incoming message either sent from a remote peer or generated within the library
             </summary>
         </member>
-        <member name="M:Lidgren.Network.NetIncomingMessage.Decrypt(Lidgren.Network.INetEncryption)">
+        <member name="M:Lidgren.Network.NetIncomingMessage.Decrypt(Lidgren.Network.NetEncryption)">
             <summary>
             Decrypt a message
             </summary>
@@ -1713,7 +1607,7 @@
             Outgoing message used to send data to remote peer(s)
             </summary>
         </member>
-        <member name="M:Lidgren.Network.NetOutgoingMessage.Encrypt(Lidgren.Network.INetEncryption)">
+        <member name="M:Lidgren.Network.NetOutgoingMessage.Encrypt(Lidgren.Network.NetEncryption)">
             <summary>
             Encrypt this message using the provided algorithm; no more writing can be done before sending it or the message will be corrupt!
             </summary>
@@ -1766,6 +1660,11 @@
         <member name="P:Lidgren.Network.NetPeerConfiguration.AppIdentifier">
             <summary>
             Gets the identifier of this application; the library can only connect to matching app identifier peers
+            </summary>
+        </member>
+        <member name="P:Lidgren.Network.NetPeerConfiguration.UnreliableSizeBehaviour">
+            <summary>
+            Gets or sets the behaviour of unreliable sends above MTU
             </summary>
         </member>
         <member name="P:Lidgren.Network.NetPeerConfiguration.NetworkThreadName">
@@ -1891,6 +1790,26 @@
         <member name="P:Lidgren.Network.NetPeerConfiguration.SimulatedDuplicatesChance">
             <summary>
             Gets or sets the simulated amount of duplicated packets from 0.0f to 1.0f
+            </summary>
+        </member>
+        <member name="T:Lidgren.Network.NetUnreliableSizeBehaviour">
+            <summary>
+            Behaviour of unreliable sends above MTU
+            </summary>
+        </member>
+        <member name="F:Lidgren.Network.NetUnreliableSizeBehaviour.IgnoreMTU">
+            <summary>
+            Sending an unreliable message will ignore MTU and send everything in a single packet; this is the new default
+            </summary>
+        </member>
+        <member name="F:Lidgren.Network.NetUnreliableSizeBehaviour.NormalFragmentation">
+            <summary>
+            Old behaviour; use normal fragmentation for unreliable messages - if a fragment is dropped, memory for received fragments are never reclaimed!
+            </summary>
+        </member>
+        <member name="F:Lidgren.Network.NetUnreliableSizeBehaviour.DropAboveMTU">
+            <summary>
+            Alternate behaviour; just drops unreliable messages above MTU
             </summary>
         </member>
         <member name="T:Lidgren.Network.NetPeerStatistics">
@@ -2379,7 +2298,7 @@
             Computes the client session value
             </summary>
         </member>
-        <member name="M:Lidgren.Network.NetSRP.CreateEncryption(System.Byte[])">
+        <member name="M:Lidgren.Network.NetSRP.CreateEncryption(Lidgren.Network.NetPeer,System.Byte[])">
             <summary>
             Create XTEA symmetrical encryption object from sessionValue
             </summary>
@@ -2494,6 +2413,11 @@
             Create a hex string from an array of bytes
             </summary>
         </member>
+        <member name="M:Lidgren.Network.NetUtility.ToHexString(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Create a hex string from an array of bytes
+            </summary>
+        </member>
         <member name="M:Lidgren.Network.NetUtility.GetBroadcastAddress">
             <summary>
             Gets the local broadcast address
@@ -2550,6 +2474,11 @@
             </summary>
         </member>
         <member name="M:Lidgren.Network.NetUtility.CreateSHA1Hash(System.Byte[])">
+            <summary>
+            Create a SHA1 digest from a byte buffer
+            </summary>
+        </member>
+        <member name="M:Lidgren.Network.NetUtility.CreateSHA1Hash(System.Byte[],System.Int32,System.Int32)">
             <summary>
             Create a SHA1 digest from a byte buffer
             </summary>

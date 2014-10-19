@@ -7,6 +7,7 @@ using Silentor.TB.Client.Players;
 using Silentor.TB.Client.Storage;
 using Silentor.TB.Client.Tools;
 using Silentor.TB.Common.Maps;
+using Silentor.TB.Common.Maps.Chunks;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Messages;
 

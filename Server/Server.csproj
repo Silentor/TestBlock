@@ -37,6 +37,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FBRLogger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Client.Unity\Assets\Tools\FBRLogger\FBRLogger.dll</HintPath>
+    </Reference>
     <Reference Include="FBRLogger.NLogTarget">
       <HintPath>..\..\TestBlock\Client.Unity\Assets\Tools\FBRLogger\FBRLogger.NLogTarget.dll</HintPath>
     </Reference>
@@ -115,7 +119,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Binaries.targets" Condition="Exists('..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Binaries.targets')" />
-   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

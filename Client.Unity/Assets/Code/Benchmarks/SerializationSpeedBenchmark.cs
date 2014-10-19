@@ -57,7 +57,7 @@ namespace Assets.Code.Benchmarks
             var first = generator.GenerateSync(Vector2i.Zero);
 
             var sw = Stopwatch.StartNew();
-            var buffer = _serializer.Serialize(first);
+            var buffer = _serializer.Serialize(new ChunkMessage(first));
             var second = _serializer.Deserialize(buffer);
 
             print("Serialized/deserialized time: " + sw.ElapsedMilliseconds + " ms, data size: " + buffer.LengthBytes);

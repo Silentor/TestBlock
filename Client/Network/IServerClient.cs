@@ -1,4 +1,5 @@
 ﻿using System;
+using Silentor.TB.Common.Maps.Chunks;
 using Silentor.TB.Common.Network.Messages;
 
 namespace Silentor.TB.Client.Network
