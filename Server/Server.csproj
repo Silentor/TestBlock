@@ -39,10 +39,10 @@
   <ItemGroup>
     <Reference Include="FBRLogger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Client.Unity\Assets\Tools\FBRLogger\FBRLogger.dll</HintPath>
+      <HintPath>..\Libs\Common\FBRLogger\FBRLogger.dll</HintPath>
     </Reference>
     <Reference Include="FBRLogger.NLogTarget">
-      <HintPath>..\..\TestBlock\Client.Unity\Assets\Tools\FBRLogger\FBRLogger.NLogTarget.dll</HintPath>
+      <HintPath>..\Libs\Common\FBRLogger\FBRLogger.NLogTarget.dll</HintPath>
     </Reference>
     <Reference Include="Lidgren.Network">
       <HintPath>..\Libs\Server\Lidgren\Lidgren.Network.dll</HintPath>
