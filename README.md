@@ -5,7 +5,7 @@ Training project - simple Minecraft-like online multiplayer game. Work is just b
 
 * Server: .Net Framework 4.5 + TPL DataFlow (task processing) + MonoGame (for game math)
 
-* Network: Lidgren Network Library (handy messaging over UDP ) + protobuf-net (messages de/serialization)+ LZ4 (large messages compression)
+* Network: Lidgren Network Library (handy messaging over UDP, simple serialization) + LZ4 (large messages compression)
 
 * Client: Unity3d + Zenject (Unity friendly DI framework)
 
