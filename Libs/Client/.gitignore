@@ -1,0 +1,2 @@
+#Unignore Unity metafiles (from Visual Studio gitignore), because imported MonoBehaviours will be missed in scene without metafiles
+!*.meta

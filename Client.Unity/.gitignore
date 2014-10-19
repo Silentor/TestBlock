@@ -17,7 +17,7 @@
 #Unity3D Generated File On Crash Reports
 sysinfo.txt
 
-#Unignore metafiles (from Visual Studio gitignore)
+#Unignore Unity metafiles (from Visual Studio gitignore)
 !*.meta
 
 # But ignore metafiles of obj/bin folders, VS project settings, UnityVS generated filse
