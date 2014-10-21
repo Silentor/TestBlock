@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using NLog;
+using Silentor.TB.Server.Time;
 
 namespace Silentor.TB.Server.Simulation
 {
@@ -8,24 +9,22 @@ namespace Silentor.TB.Server.Simulation
     /// </summary>
     public class GameLoop
     {
-        private readonly World _world;
-
-        public Time.Timer Timer { get; private set; }
-
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
         public GameLoop(World world, Time.Timer timer)
         {
             _world = world;
-            Timer = timer;
+            _timer = timer;
 
-            Timer.PhysicTick += OnTimePhysicTick;
+            _timer.PhysicTick += OnTimePhysicTick;
         }
 
         public void Start()
         {
-            Timer.Start();
+            _timer.Start();
         }
+
+        private readonly World _world;
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private readonly Timer _timer;
 
         private void OnTimePhysicTick(Time.Timer timer)
         {
@@ -38,20 +37,22 @@ namespace Silentor.TB.Server.Simulation
 
         private void SimulatePlayers()
         {
+            //Simulate one step of physic
             if(_world.Players.Count > 16)
-                Parallel.ForEach(_world.Players, sim => sim.SimulatePlayer());
+                Parallel.ForEach(_world.Players, playerController => playerController.Simulate());
             else
                 foreach (var simulator in _world.Players)
-                    simulator.SimulatePlayer();
+                    simulator.Simulate();
 
             //Entity collision resolve
             //...
 
+            //Update controllers for result of simulation
             if (_world.Players.Count > 16)
-                Parallel.ForEach(_world.Players, sim => sim.Controller.UpdateClient());
+                Parallel.ForEach(_world.Players, playerController => playerController.Update());
             else
-                foreach (var simulator in _world.Players)
-                    simulator.Controller.UpdateClient();
+                foreach (var playerController in _world.Players)
+                    playerController.Update();
         }
 
     }

@@ -47,7 +47,7 @@ namespace Silentor.TB.Client.Network
             _applicationEvents.FrameTick += ApplicationEventsFrameTick;
             _applicationEvents.Closed += ApplicationEventsOnClosed;
 
-            _serializer = new MessageSerializer(() => _connection.CreateMessage());
+            _serializer = new MessageSerializer(size => _connection.CreateMessage(size));
 
             Log.Info("Server started");
         }
@@ -62,7 +62,7 @@ namespace Silentor.TB.Client.Network
 
         public void MovePlayer(Vector3 movement, Vector2 rotation, bool jump = false)
         {
-            var playerMovement = new PlayerMovement (movement.ToProtoVector(), rotation.ToProtoVector(), jump);
+            var playerMovement = new HeroMovement (movement.ToProtoVector(), rotation.ToProtoVector(), jump);
             SendMessage(playerMovement);
 
             Log.Debug("...-> Player movement {0}, rotation {1}, jump {2} send", movement, rotation, jump);

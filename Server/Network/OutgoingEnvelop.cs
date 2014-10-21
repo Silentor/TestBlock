@@ -5,7 +5,7 @@ namespace Silentor.TB.Server.Network
 {
     public class OutgoingEnvelop
     {
-        public Session Client;
+        public Client Client;
         public Message Message;
         public NetOutgoingMessage SendBuffer;
     }

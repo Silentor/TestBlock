@@ -4,7 +4,7 @@ using Silentor.TB.Common.Network.Serialization;
 
 namespace Silentor.TB.Common.Network.Messages
 {
-    public class ChunkRequestMessage : Message
+    public class ChunkRequestMessage : ClientRequest
     {
         public ChunkRequestMessage(Vector2i position)
         {

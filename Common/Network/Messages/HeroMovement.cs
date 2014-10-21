@@ -4,9 +4,9 @@ using Silentor.TB.Common.Network.Serialization;
 
 namespace Silentor.TB.Common.Network.Messages
 {
-    public class PlayerMovement : Message
+    public class HeroMovement : PlayerAction
     {
-        public PlayerMovement(ProtoVector3 movement, ProtoVector2 rotation, bool jump)
+        public HeroMovement(ProtoVector3 movement, ProtoVector2 rotation, bool jump)
         {
             Movement = movement;
             Rotation = rotation;
@@ -16,7 +16,7 @@ namespace Silentor.TB.Common.Network.Messages
         /// <summary>
         /// Deserialization
         /// </summary>
-        internal PlayerMovement(NetBuffer buffer)
+        internal HeroMovement(NetBuffer buffer)
         {
             Movement = buffer.ReadVector3();
             Rotation = buffer.ReadVector2();
@@ -29,10 +29,10 @@ namespace Silentor.TB.Common.Network.Messages
 
         public bool Jump { get; private set; }
 
-        [Header(Headers.PlayerMovement)]
+        [Header(Headers.HeroMovement)]
         public override Headers Header
         {
-            get { return Headers.PlayerMovement; }
+            get { return Headers.HeroMovement; }
         }
 
         public override int Size

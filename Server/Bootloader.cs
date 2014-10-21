@@ -32,9 +32,8 @@ namespace Silentor.TB.Server
             _globe = new Globe(globe, blockSet);
             _timer = new Timer();
             _server = new Network.Server(_config.Port);
-            _world = new World(_server, _globe, _timer);
+            _world = new World(_globe);
             _gameLoop = new GameLoop(_world, _timer);
-            _timer = _gameLoop.Timer;
             _statistics = new Statistics(_server);
 
             _engine = new Engine(_server, _world, _timer);
@@ -62,7 +61,7 @@ namespace Silentor.TB.Server
 
         private readonly Config _config;
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        private Silentor.TB.Server.Network.Server _server;
+        private Network.Server _server;
         private readonly GameLoop _gameLoop;
         private readonly Timer _timer;
         private World _world;

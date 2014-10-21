@@ -18,7 +18,7 @@ namespace Silentor.TB.Common.Network.Serialization
     /// </summary>
     public class MessageSerializer
     {
-        public MessageSerializer(Func<NetBuffer> bufferGenerator = null, Action<NetBuffer> bufferDisposer = null)
+        public MessageSerializer(Func<int, NetBuffer> bufferGenerator = null, Action<NetBuffer> bufferDisposer = null)
         {
             _bufferGenerator = bufferGenerator;
             _bufferDisposer = bufferDisposer;
@@ -42,7 +42,7 @@ namespace Silentor.TB.Common.Network.Serialization
         /// <returns></returns>
         public byte[] Serialize(Message message, out int length)
         {
-            var netBuffer = GetBuffer();
+            var netBuffer = GetBuffer(message.Size);
             Serialize(message, netBuffer);
 
             length = netBuffer.LengthBytes;
@@ -51,7 +51,7 @@ namespace Silentor.TB.Common.Network.Serialization
 
         public NetBuffer Serialize(Message message)
         {
-            var buffer = GetBuffer();
+            var buffer = GetBuffer(message.Size);
             Serialize(message, buffer);
             return buffer;
         }
@@ -75,12 +75,12 @@ namespace Silentor.TB.Common.Network.Serialization
 
         public Message Deserialize(byte[] buffer)
         {
-            var netBuffer = GetBuffer();
+            var netBuffer = GetBuffer(buffer.Length);
             netBuffer.Write(buffer);
             return Deserialize(netBuffer);
         }
 
-        private readonly Func<NetBuffer> _bufferGenerator;
+        private readonly Func<int, NetBuffer> _bufferGenerator;
         private readonly Action<NetBuffer> _bufferDisposer;
         private readonly Dictionary<Headers, Type> _messages = new Dictionary<Headers, Type>();
         private bool _messagesCollected;
@@ -117,10 +117,10 @@ namespace Silentor.TB.Common.Network.Serialization
             Log.Debug("Collected {0} message headers", _messages.Count);
         }
 
-        private NetBuffer GetBuffer()
+        private NetBuffer GetBuffer(int estimatedSize)
         {
             if (_bufferGenerator != null)
-                return _bufferGenerator();
+                return _bufferGenerator(estimatedSize);
             else
                 return new NetBuffer();
         }

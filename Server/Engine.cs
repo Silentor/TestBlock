@@ -34,7 +34,7 @@ namespace Silentor.TB.Server
 
             _dispatch = new ActionBlock<IncomingEnvelop>(im => DispatchMessages(im));
 
-            server.MessageReceived.Subscribe(_dispatch.AsObserver());
+            server.EngineMessageReceived.Subscribe(_dispatch.AsObserver());
         }
 
         private async Task DispatchMessages(IncomingEnvelop envelop)
@@ -50,25 +50,7 @@ namespace Silentor.TB.Server
                         break;
 
                     case Headers.Disconnect:
-                        ProcessDisconnect((Disconnect) envelop.Message, envelop.Client);
-                        break;
-
-                    case Headers.PlayerMovement:
-                    {
-                        //Do not async call player actions, bc they are should be very short
-                        var simulator = envelop.Client;
-                        simulator.ProcessAction(envelop.Message);
-                    }
-                        break;
-
-                    case Headers.GetChunk:
-                    {
-                        var data = (ChunkRequestMessage) envelop.Message;
-                        var simulator = envelop.Client;
-                        var chunk = await simulator.Map.GetChunkAsync(data.Position);
-                        if (chunk != null)
-                            simulator.Session.SendChunk(chunk.ToChunkContents());
-                    }
+                        ProcessDisconnect((Disconnect) envelop.Message, envelop.Hero);
                         break;
 
                     default:
@@ -88,11 +70,11 @@ namespace Silentor.TB.Server
 
         private void ProcessLogin(LoginData data, NetConnection connection)
         {
-            Log.Info("->... Received login request from \"{0}\", {1}", data.Name, connection.RemoteEndPoint);
+            Log.Debug("->... Received login request from \"{0}\", {1}", data.Name, connection.RemoteEndPoint);
 
             //Create player session environment
             var sessionId = Interlocked.Increment(ref _sessionIdCounter);
-            var session = new Session(connection, _server, sessionId);
+            var client = _server.CreateClient(connection, sessionId);
 
             //Load player simulator data or create them
             //Create bc loading is not implemented
@@ -105,26 +87,24 @@ namespace Silentor.TB.Server
 
             //Create player and his proxy
             var player = new Player(sessionId, data.Name, map, _timer, playerStartPosition, _world);    //todo World reference must be removed
-            var playerController = new PlayerController(session, player, map);
+            var playerController = new HeroController(client, player, map);
 
-            //Create simulator
-            var simulator = new Simulator(player, map, playerController, session);
-
-            _world.AddPlayer(simulator);
+            _world.AddPlayer(playerController);
 
             //Confirm login
-            session.LoginAccept(player.Id, player.Position, Quaternion.Identity, Simulator.SimulationWindowRadius, simulator);
+            client.LoginAccept(player.Id, player.Position, Quaternion.Identity, Simulator.SimulationWindowRadius, playerController);
         }
 
-        private void ProcessDisconnect(Disconnect data, Simulator player)
+        private void ProcessDisconnect(Disconnect data, HeroController hero)
         {
-            Log.Info("->... Received disconnect request from \"{0}\", {1}", player.Player.Name, player.Session.Connection.RemoteEndPoint);
+            Log.Info("->... Received disconnect request from \"{0}\"", hero.Player.Name);
 
             //Close not network parts of simulator...
 
-            //Remove player and close network stuff
-            _world.RemovePlayer(player);
-            player.Dispose();
+            //Remove player from gameworld and close network stuff
+            _world.RemovePlayer(hero);
+            hero.Client.Close();
+            hero.Dispose();
         }
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();

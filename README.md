@@ -7,7 +7,7 @@ Training project - simple Minecraft-like online multiplayer game. Work is just b
 
 * Network: Lidgren Network Library (handy messaging over UDP, simple serialization) + LZ4 (large messages compression)
 
-* Client: Unity3d + Zenject (Unity friendly DI framework)
+* Client: Unity3d (WebPlayer compartible) + Zenject (Unity friendly DI framework)
 
 * Logging: (customized on client) NLog + Log4View (log viewer)
 
@@ -16,6 +16,6 @@ Training project - simple Minecraft-like online multiplayer game. Work is just b
 Build and run
 -------------
 
-Works for sure on Visual Studio Pro 2013 + Visual Studio Tools for Unity 1.9 + Unity 4.6 beta 17 (because of new Unity UI)
+Works for sure on Visual Studio Pro 2013 + Visual Studio Tools for Unity 1.9 (free tool for easy develop and debug Unity projects in MSVS) + Unity 4.6 beta 20 (because of new Unity UI)
 
 todo

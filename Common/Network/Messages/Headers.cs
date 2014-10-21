@@ -15,7 +15,7 @@
 
         //Players
         EntityUpdate,
-        PlayerMovement,
+        HeroMovement,
         
         Test = 255
     }

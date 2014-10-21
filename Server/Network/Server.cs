@@ -23,9 +23,9 @@ namespace Silentor.TB.Server.Network
     public class Server
     {
         /// <summary>
-        /// Fires on message received for logined client
+        /// Fires on game engine message received
         /// </summary>
-        public IObservable<IncomingEnvelop> MessageReceived
+        public IObservable<IncomingEnvelop> EngineMessageReceived
         {
             get { return _decodeToConsumer.AsObservable(); }
         }
@@ -50,26 +50,8 @@ namespace Silentor.TB.Server.Network
                 Priority = ThreadPriority.Normal
             };
             _networkWorker.Start();
-            _decode = new TransformBlock<NetIncomingMessage, IncomingEnvelop>(msg => DecodeMessages(msg), 
-                new ExecutionDataflowBlockOptions(){SingleProducerConstrained = true});
 
-            //Create sending workers
-            _producerToEncode = new BufferBlock<OutgoingEnvelop>();
-            _encode = new TransformBlock<OutgoingEnvelop, OutgoingEnvelop>(msg => EncodeMessages(msg));
-            _send = new ActionBlock<OutgoingEnvelop>(msg => WriteMessages(msg));
-
-            //Create links
-            var propagateOption = new DataflowLinkOptions() {PropagateCompletion = true};
-            _readToDecode.LinkTo(_decode, propagateOption);
-            _decode.LinkTo(_decodeToConsumer, propagateOption, inc => inc.Message != null);
-            _decode.LinkTo(new ActionBlock<IncomingEnvelop>(ie =>
-            {
-                Log.Trace("Nonprocessible message discarded from {0}", ie.Connection.RemoteEndPoint);
-                _errorPacketsCount++;
-            }));
-
-            _producerToEncode.LinkTo(_encode, propagateOption);
-            _encode.LinkTo(_send, propagateOption);
+            InitDataflow();
         }
 
         /// <summary>
@@ -77,7 +59,7 @@ namespace Silentor.TB.Server.Network
         /// </summary>
         /// <param name="message"></param>
         /// <param name="client"></param>
-        public void Send(Message message, Session client)
+        public void Send(Message message, Client client)
         {
             _producerToEncode.Post(new OutgoingEnvelop { Client = client, Message = message });
         }
@@ -85,6 +67,12 @@ namespace Silentor.TB.Server.Network
         public void CompleteSend()
         {
             _readToDecode.Complete();
+        }
+
+        public Client CreateClient(NetConnection connection, int sessionId)
+        {
+            var newClient = new Client(connection, this, sessionId);
+            return newClient;
         }
 
         public void Stop()
@@ -104,12 +92,44 @@ namespace Silentor.TB.Server.Network
         #region Dataflow Pipeline
 
         private readonly BufferBlock<NetIncomingMessage> _readToDecode = new BufferBlock<NetIncomingMessage>();
-        private readonly TransformBlock<NetIncomingMessage, IncomingEnvelop> _decode;
+        private TransformBlock<NetIncomingMessage, IncomingEnvelop> _decode;
         private readonly BufferBlock<IncomingEnvelop> _decodeToConsumer = new BufferBlock<IncomingEnvelop>();
+        private ActionBlock<IncomingEnvelop> _processClientMessage;
 
-        private readonly BufferBlock<OutgoingEnvelop> _producerToEncode = new BufferBlock<OutgoingEnvelop>();
-        private readonly TransformBlock<OutgoingEnvelop, OutgoingEnvelop> _encode;
-        private readonly ActionBlock<OutgoingEnvelop> _send;
+        private BufferBlock<OutgoingEnvelop> _producerToEncode;
+        private TransformBlock<OutgoingEnvelop, OutgoingEnvelop> _encode;
+        private ActionBlock<OutgoingEnvelop> _send;
+
+        /// <summary>
+        /// Initialize server TPL Dataflow
+        /// </summary>
+        private void InitDataflow()
+        {
+            //Create receiving blocks
+            _decode = new TransformBlock<NetIncomingMessage, IncomingEnvelop>(msg => DecodeMessages(msg),
+                new ExecutionDataflowBlockOptions { SingleProducerConstrained = true });
+            _processClientMessage = new ActionBlock<IncomingEnvelop>(msg => ProcessClientMessage(msg));
+
+            //Create sending blocks
+            _producerToEncode = new BufferBlock<OutgoingEnvelop>();
+            _encode = new TransformBlock<OutgoingEnvelop, OutgoingEnvelop>(msg => EncodeMessages(msg));
+            _send = new ActionBlock<OutgoingEnvelop>(msg => WriteMessages(msg));
+
+            //Create links
+            var propagateOption = new DataflowLinkOptions { PropagateCompletion = true };
+            _readToDecode.LinkTo(_decode, propagateOption);
+
+            _decode.LinkTo(_processClientMessage, propagateOption, msg => msg.Message is PlayerAction);
+            _decode.LinkTo(_decodeToConsumer, propagateOption, inc => inc.Message != null);
+            _decode.LinkTo(new ActionBlock<IncomingEnvelop>(ie =>
+            {
+                Log.Trace("Fail message discarded from {0}", ie.Connection.RemoteEndPoint);
+                _errorPacketsCount++;
+            }));
+
+            _producerToEncode.LinkTo(_encode, propagateOption);
+            _encode.LinkTo(_send, propagateOption);
+        }
 
         /// <summary>
         /// Read raw messages and direct its for decode and process
@@ -204,9 +224,10 @@ namespace Silentor.TB.Server.Network
                             //Notify if player was connected
                             if (im.SenderConnection.Tag != null)
                             {
+                                //Construct disconnect message
                                 var disconnect = new IncomingEnvelop
                                 {
-                                    Client = (Simulator) im.SenderConnection.Tag,
+                                    Hero = (HeroController) im.SenderConnection.Tag,
                                     Message = new Disconnect(),
                                     RecvBuffer = im
                                 };
@@ -240,7 +261,7 @@ namespace Silentor.TB.Server.Network
                         {
                             RecvBuffer = im,
                             Message = command,
-                            Client = (Simulator) im.SenderConnection.Tag,
+                            Hero = (HeroController) im.SenderConnection.Tag,
                         };
 
                         //Route message
@@ -262,12 +283,32 @@ namespace Silentor.TB.Server.Network
             return new IncomingEnvelop(){RecvBuffer = im };
         }
 
+        private void ProcessClientMessage(IncomingEnvelop message)
+        {
+            Log.Trace("Process client message {0}", message);
+
+            try
+            {
+                var client = message.Hero.Client as IMessageReceiver;
+                client.Receive(message.Message);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Exception in ProcessClientMessage()", ex);
+                throw;
+            }
+            finally
+            {
+                message.Recycle();
+            }
+        }
+
         private OutgoingEnvelop EncodeMessages(OutgoingEnvelop envelope)
         {
             try
             {
                 //var serializer = GetSerializer();
-                var sendBuffer = envelope.Client.CreateSendBuffer();
+                var sendBuffer = envelope.Client.CreateSendBuffer(envelope.Message.Size);
                 envelope.Message.Serialize(sendBuffer);
                 envelope.SendBuffer = sendBuffer;
 
@@ -335,6 +376,9 @@ namespace Silentor.TB.Server.Network
             }
         }
 
+        /// <summary>
+        /// Unity Web security responce
+        /// </summary>
         private const string SocketPolicy = @"
 <?xml version=""1.0""?>
 <cross-domain-policy>
@@ -346,7 +390,7 @@ namespace Silentor.TB.Server.Network
         private readonly Thread _networkWorker;
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        private readonly List<Session> _clients = new List<Session>();
+        private readonly List<Client> _clients = new List<Client>();
         private readonly MessageSerializer _serializer = new MessageSerializer();
 
         //Pool of message encode/decode serializers

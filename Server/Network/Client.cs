@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Threading.Tasks.Dataflow;
 using JetBrains.Annotations;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
@@ -16,27 +17,11 @@ namespace Silentor.TB.Server.Network
     /// <summary>
     /// Network connection from server to client
     /// </summary>
-    public class Session
+    public class Client : IMessageReceiver
     {
-        private readonly NetConnection _connection;
-        private readonly Server _server;
-        private readonly NetPeer _client;
-        private readonly MessageSerializer _serializer;
-
-        //Streaming send stuff
-        private readonly ConcurrentQueue<byte[]> _streamsToSend = new ConcurrentQueue<byte[]>();
-        private byte[] _currentStream;
-        private int _currentStreamPosition;
-        private readonly int _packetLenght;
-        private readonly int _headerPacketLenght;
-        private readonly byte[] _packetBuffer;
-
-        private static int _clientCounter = 0;
-        private readonly Logger Log;
-
         public NetConnection Connection { get { return _connection; } }
 
-        public Session([NotNull] NetConnection clientConnection, Server server, int id)
+        public Client([NotNull] NetConnection clientConnection, Server server, int id)
         {
             if (clientConnection == null) throw new ArgumentNullException("clientConnection");
 
@@ -48,17 +33,17 @@ namespace Silentor.TB.Server.Network
             _headerPacketLenght = _packetLenght - 10;           //Зарезервировать немного места под заголовочную информацию
 
             _packetBuffer = new byte[_packetLenght];
-            _serializer = new MessageSerializer(() => _client.CreateMessage());
+            _serializer = new MessageSerializer(size => _client.CreateMessage(size));
 
-            Log = LogManager.GetLogger("Wob.Server.Network.Session" + id);
+            Log = LogManager.GetLogger(GetType().FullName + id);
             Log.Debug("Created session");
         }
 
-        public void LoginAccept(int id, Vector3 startPosition, Quaternion rotation, int simulationSize, Simulator simulator)
+        public void LoginAccept(int id, Vector3 startPosition, Quaternion rotation, int simulationSize, HeroController hero)
         {
             var message = new LoginResponce(id, startPosition.ToProtoVector(), rotation.ToProtoQuaternion(), 
                 simulationSize);
-            _connection.Tag = simulator;
+            _connection.Tag = hero;
             _server.Send(message, this);
 
             Log.Info("<-... Send login acceptation for {0}", id);
@@ -175,15 +160,55 @@ namespace Silentor.TB.Server.Network
             return _client.CreateMessage();
         }
 
-
         public void Close()
         {
             _connection.Disconnect("Client closed");
+            _connection.Tag = null;
         }
 
         public override string ToString()
         {
             return String.Format("Session from {0}", Connection.RemoteEndPoint);
+        }
+
+        /// <summary>
+        /// Hero action, needs urgent processing
+        /// </summary>
+        public event Action<Message> HeroActionReceived;
+
+        /// <summary>
+        /// Client request, not so urgent
+        /// </summary>
+        public ISourceBlock<ClientRequest> ClientRequestReceived
+        {
+            get { return _clientRequests; }
+        }
+
+        private readonly NetConnection _connection;
+        private readonly Server _server;
+        private readonly NetPeer _client;
+        private readonly MessageSerializer _serializer;
+        private readonly BufferBlock<ClientRequest> _clientRequests = new BufferBlock<ClientRequest>();
+
+        //Streaming send stuff
+        private readonly ConcurrentQueue<byte[]> _streamsToSend = new ConcurrentQueue<byte[]>();
+        private byte[] _currentStream;
+        private int _currentStreamPosition;
+        private readonly int _packetLenght;
+        private readonly int _headerPacketLenght;
+        private readonly byte[] _packetBuffer;
+
+        private static int _clientCounter = 0;
+        private readonly Logger Log;
+
+        void IMessageReceiver.Receive(Message msg)
+        {
+            if (msg is HeroMovement)
+                HeroActionReceived(msg);
+            else if(msg is ClientRequest)
+                _clientRequests.Post((ClientRequest)msg);
+            else 
+                Log.Error("Received unknown message {0}", msg);
         }
     }
 }

@@ -34,17 +34,24 @@ namespace Silentor.TB.Common.Network.Messages
     }
 
     /// <summary>
-    /// C2S message about some player activity, high priority
+    /// C2S message about some hero activity (move, attack), urgent
     /// </summary>
-    public abstract class HeroAction : Message
+    public abstract class PlayerAction : Message
     {
     }
+
+    /// <summary>
+    /// C2S request for some data for client application (map chunk, inventory), not urgent
+    /// </summary>
+    public abstract class ClientRequest : Message
+    {
+    }
+
 
     /// <summary>
     /// Login, Disconnect, etc
     /// </summary>
     public abstract class PlayerManagement : Message
     {
-
     }
 }

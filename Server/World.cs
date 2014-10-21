@@ -1,81 +1,79 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using NLog;
+using OpenTK.Graphics.OpenGL;
 using Silentor.TB.Server.Maps;
+using Silentor.TB.Server.Network;
 using Silentor.TB.Server.Players;
 
 namespace Silentor.TB.Server
 {
     /// <summary>
-    /// Manages all-players stuff
+    /// Manages game world stuff: all globes, players, mobs etc
     /// </summary>
     public class World
     {
-        private readonly Network.Server _server;
-        private readonly Globe _globe;
-        private readonly Time.Timer _timer;
-
         /// <summary>
         /// All globes of the world
         /// </summary>
         public readonly IEnumerable<Globe> Globes;
 
-        public IReadOnlyList<Simulator> Players
+        /// <summary>
+        /// All players of the world
+        /// </summary>
+        public IReadOnlyList<HeroController> Players
         {
             get
             {
-                var changes = Interlocked.Exchange(ref _playersLock, 0);
-                if (_playersCache == null || changes > 0)
-                    _playersCache = _players.Values.ToArray();
+                if(_playersChanged)
+                    lock (_players)
+                        if (_playersChanged)
+                            _playersCache = _players.ToArray();
 
                 return _playersCache; 
             }
         }
 
-        public World(Silentor.TB.Server.Network.Server server, Globe globe, Time.Timer timer)
+        public World(Globe globe)
         {
-            _server = server;
-            _globe = globe;
-            _timer = timer;
-            Globes = new[] {_globe};
+            Globes = new[] {globe};
         }
 
-        public void AddPlayer(Simulator simulator)
+        public void AddPlayer(HeroController player)
         {
-            if (!_players.TryAdd(simulator, simulator))
-                throw new InvalidOperationException("Players simulator already added");
-            Interlocked.Increment(ref _playersLock);
+            lock (_players)
+            {
+                Debug.Assert(!_players.Contains(player));
 
-            Log.Info("Added player {0}", simulator.Player.Name);
+                _players.Add(player);
+                _playersChanged = true;
+            }
+
+            Log.Debug("Added player {0} to gameworld", player.Player.Name);
         }
 
-        public void RemovePlayer(Simulator player)
+        public void RemovePlayer(HeroController player)
         {
-            if(_players.TryRemove(player, out player))
-                Interlocked.Increment(ref _playersLock);        //Not very concurrently
+            lock (_players)
+            {
+                Debug.Assert(_players.Contains(player));
+
+                _players.Remove(player);
+                _playersChanged = true;
+            }
+
+            Log.Debug("Removed player {0} from gameworld", player.Player.Name);
         }
 
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        //private void ProcessGetChunk(ChunkRequestMessage message, Simulator client)
-        //{
-        //    var chunk = client.Map.GetChunk(message.Position);
-
-        //    //todo chunk must be locked while queuing on send
-        //    if (chunk != null)
-        //        client.Session.SendChunk(chunk.ToChunkContents());
-        //    else
-        //        client.Controller.StoreChunkRequest(message);
-        //}
-
-        private static Logger Log = LogManager.GetCurrentClassLogger();
-
-        private ConcurrentDictionary<Simulator, Simulator> _players = new ConcurrentDictionary<Simulator, Simulator>();
-        private Simulator[] _playersCache;
-        private int _playersLock;
-        private static int _playersCounter = 0;
+        private readonly List<HeroController> _players = new List<HeroController>();
+        private bool _playersChanged = true;
+        private IReadOnlyList<HeroController> _playersCache;
 
     }
 }
