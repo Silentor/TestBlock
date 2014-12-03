@@ -16,6 +16,6 @@ Training project - simple Minecraft-like online multiplayer game. Work is just b
 Build and run
 -------------
 
-Works for sure on Visual Studio Pro 2013 + Visual Studio Tools for Unity 1.9 + Unity 4.6 beta 17 (because of new Unity UI)
+Works for sure on Visual Studio Pro 2013 + Visual Studio Tools for Unity 1.9 + Unity 4.6 (because of new Unity UI)
 
 todo
