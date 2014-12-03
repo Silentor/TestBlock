@@ -40,15 +40,13 @@ namespace Silentor.TB.Common.Network.Messages
 
         public override int Size
         {
-            get { return 1 + 4 + 12 + 16 + 1; }
+            get { return 4 + 12 + 16 + 1; }
         }
 
         //True if entity is dissapeared from vision
 
-        public override void Serialize(NetBuffer buffer)
+        internal override void Serialize(NetBuffer buffer)
         {
-            base.Serialize(buffer);             //1
-
             buffer.Write(Id);                   //4 
             buffer.Write(Position);             //12
             buffer.Write(Rotation);             //16

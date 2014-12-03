@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Silentor.TB.Common.Network.Messages;
 
-namespace Silentor.TB.Common.Network.Messages
+namespace Silentor.TB.Common.Network.Serialization
 {
     /// <summary>
     /// Mark property <see cref="Message.Header" /> with this attribute/>
@@ -15,6 +13,8 @@ namespace Silentor.TB.Common.Network.Messages
 
         public HeaderAttribute(Headers header)
         {
+            if(header > MessageFactory.MaxHeader) throw new ArgumentOutOfRangeException("header");
+
             Header = header;
         }
     }

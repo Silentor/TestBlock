@@ -16,13 +16,14 @@ namespace Silentor.TB.Server.Maps
         public Bounds2i Bounds { get { return _chunks.Bounds; } }
 
         public Globe Globe { get; private set; }
+
         private readonly Grid<Chunk> _chunks;
         private readonly ReaderWriterLockSlim _chunksLock = new ReaderWriterLockSlim();
         private readonly Logger Log;
 
         public Map(int id, Globe globe, Bounds2i bounds)
         {
-            Log = LogManager.GetLogger("Wob.Server.Maps.Map" + id);
+            Log = LogManager.GetLogger(GetType().FullName + id);
 
             Globe = globe;
 

@@ -1,136 +1,113 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Remoting.Messaging;
-using System.Runtime.Serialization;
-using System.Text;
+using System.Diagnostics;
 using JetBrains.Annotations;
 using Lidgren.Network;
 using NLog;
+using Silentor.TB.Common.Network.Compression;
 using Silentor.TB.Common.Network.Messages;
 
 namespace Silentor.TB.Common.Network.Serialization
 {
     /// <summary>
-    /// Converts buffer of bytes to message
+    /// Converts buffer of bytes -- message. Byte buffer always precedes by header.
+    /// Header byte: c nnnnnnn, where c - is buffer compressed bit, nnnnnnn - header
     /// </summary>
     public class MessageSerializer
     {
-        public MessageSerializer(Func<int, NetBuffer> bufferGenerator = null, Action<NetBuffer> bufferDisposer = null)
+        public const byte HeaderSize = 1;
+
+        public MessageSerializer(MessageFactory messageFactory)
         {
-            _bufferGenerator = bufferGenerator;
-            _bufferDisposer = bufferDisposer;
+            _messageFactory = messageFactory;
         }
 
         /// <summary>
-        /// Used to add custom messages from not current assembly
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="header"></param>
-        public void AddMessageHeader<T>(Headers header) where T : Message
-        {
-            _messages[header] = typeof (T);
-        }
-
-        /// <summary>
-        /// Serialize 
+        /// Serialize message
         /// </summary>
         /// <param name="message"></param>
         /// <param name="length"></param>
+        /// <param name="compress"></param>
         /// <returns></returns>
-        public byte[] Serialize(Message message, out int length)
+        public byte[] Serialize(Message message, out int length, bool? compress = null)
         {
-            var netBuffer = GetBuffer(message.Size);
-            Serialize(message, netBuffer);
-
-            length = netBuffer.LengthBytes;
-            return netBuffer.Data;
+            var buffer = GetBuffer(message.Size + HeaderSize);
+            Serialize(message, buffer, compress);
+            length = buffer.LengthBytes;
+            return buffer.Data;
         }
 
-        public NetBuffer Serialize(Message message)
+        public T Serialize<T>(Message message, T toBuffer, bool? compress = null) where T : NetBuffer
         {
-            var buffer = GetBuffer(message.Size);
-            Serialize(message, buffer);
-            return buffer;
+            if (compress == true || (compress == null && message.Compressible))
+            {
+                var tempBuffer = GetBuffer(message.Size + HeaderSize);
+                WriteHeader(false, message.Header, tempBuffer);
+                message.Serialize(tempBuffer);
+
+                var compressed = LZ4Wrapper.Wrap(tempBuffer.Data, 0, tempBuffer.LengthBytes);
+
+                WriteHeader(true, message.Header, toBuffer);
+                toBuffer.Write(compressed);
+            }
+            else
+            {
+                WriteHeader(false, message.Header, toBuffer);
+                message.Serialize(toBuffer);
+            }
+
+            return toBuffer;
         }
 
         public Message Deserialize(NetBuffer buffer)
         {
-            if (!_messagesCollected) ReflectMessagesHeaders();
+            bool isCompressed;
+            var header = ReadHeader(out isCompressed, buffer);
 
-            var header = (Headers) buffer.ReadByte();
-            Type messageType;
-            if (_messages.TryGetValue(header, out messageType))
+            Message message;
+            if (isCompressed)
             {
-                var constructor = messageType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public, null, 
-                    new[]{typeof(NetBuffer)}, null);
-                var message = (Message)constructor.Invoke(new[] {(Object)buffer});
-                //var message = (Message)Activator.CreateInstance(messageType, true, buffer);
-                return message;
+                var compressed = buffer.ReadBytes(buffer.LengthBytes - HeaderSize);
+                var uncompressed = LZ4Wrapper.Unwrap(compressed);
+                var uncompressedBuffer = GetBuffer(uncompressed.Length);
+                uncompressedBuffer.Write(uncompressed);
+
+                header = ReadHeader(out isCompressed, uncompressedBuffer);
+                Debug.Assert(!isCompressed, "Double compression is not permitted");
+
+                message = _messageFactory.Create(header, uncompressedBuffer);
             }
-            else throw new SerializationException(string.Format("There is no message for header {0}", header));
+            else
+                message = _messageFactory.Create(header, buffer);
+
+            return message;
         }
 
         public Message Deserialize(byte[] buffer)
         {
             var netBuffer = GetBuffer(buffer.Length);
             netBuffer.Write(buffer);
+
             return Deserialize(netBuffer);
         }
 
-        private readonly Func<int, NetBuffer> _bufferGenerator;
-        private readonly Action<NetBuffer> _bufferDisposer;
-        private readonly Dictionary<Headers, Type> _messages = new Dictionary<Headers, Type>();
-        private bool _messagesCollected;
+        private readonly MessageFactory _messageFactory;
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        private void Serialize(Message message, NetBuffer buffer)
+        private static void WriteHeader(bool isCompressed, Headers header, NetBuffer toBuffer)
         {
-            if (!_messagesCollected) ReflectMessagesHeaders();
-
-            message.Serialize(buffer);
+            toBuffer.Write(isCompressed);
+            toBuffer.Write((byte)header, 7);
         }
 
-        /// <summary>
-        /// Find all messages in current assembly
-        /// </summary>
-        private void ReflectMessagesHeaders()
+        private static Headers ReadHeader(out bool isCompressed, NetBuffer fromBuffer)
         {
-            _messagesCollected = true;
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
-            {
-                if (type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof (Message)))
-                {
-                    var header = type.GetProperty("Header");
-                    var headerAttr = (HeaderAttribute)Attribute.GetCustomAttribute(header, typeof (HeaderAttribute));
-
-                    if (headerAttr == null)
-                        throw new SerializationException(string.Format("Message {0} doesnt has Header attribute",
-                            type.Name));
-
-                    _messages[headerAttr.Header] = type;
-                }
-            }
-
-            Log.Debug("Collected {0} message headers", _messages.Count);
+            isCompressed = fromBuffer.ReadBoolean();
+            return (Headers) fromBuffer.ReadByte(7);
         }
 
         private NetBuffer GetBuffer(int estimatedSize)
         {
-            if (_bufferGenerator != null)
-                return _bufferGenerator(estimatedSize);
-            else
-                return new NetBuffer();
-        }
-
-        private void DisposeBuffer([NotNull] NetBuffer bufferToDispose)
-        {
-            if (bufferToDispose == null) throw new ArgumentNullException("bufferToDispose");
-
-            if (_bufferDisposer != null)
-                _bufferDisposer(bufferToDispose);
+            return new NetBuffer {Data = new byte[estimatedSize]};
         }
     }
 }

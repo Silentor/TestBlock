@@ -21,22 +21,44 @@ namespace Silentor.TB.Server.Network
     {
         public NetConnection Connection { get { return _connection; } }
 
-        public Client([NotNull] NetConnection clientConnection, Server server, int id)
+        /// <summary>
+        /// Client requests, not so urgent
+        /// </summary>
+        public ISourceBlock<ClientRequest> ClientRequestReceived
+        {
+            get { return _clientRequests; }
+        }
+
+        /// <summary>
+        /// Hero action, needs urgent processing
+        /// </summary>
+        public Action<HeroAction> HeroActionReceived { get; set; }
+
+        public Client([NotNull] NetConnection clientConnection, [NotNull] Server server,
+            [NotNull] MessageFactory messageFactory, int id)
         {
             if (clientConnection == null) throw new ArgumentNullException("clientConnection");
+            if (server == null) throw new ArgumentNullException("server");
+            if (messageFactory == null) throw new ArgumentNullException("messageFactory");
 
             _connection = clientConnection;
             _server = server;
+            _id = id;
             _client = _connection.Peer;
-
-            _packetLenght = _connection.Peer.Configuration.MaximumTransmissionUnit - 20;
-            _headerPacketLenght = _packetLenght - 10;           //Зарезервировать немного места под заголовочную информацию
-
-            _packetBuffer = new byte[_packetLenght];
-            _serializer = new MessageSerializer(size => _client.CreateMessage(size));
+            _serializer = new MessageSerializer(messageFactory);
 
             Log = LogManager.GetLogger(GetType().FullName + id);
-            Log.Debug("Created session");
+            Log.Debug("Created client");
+        }
+
+        public NetOutgoingMessage Serialize(Message message)
+        {
+            var buffer = _client.CreateMessage(message.Size + MessageSerializer.HeaderSize);
+            _serializer.Serialize(message, buffer);
+
+            Log.Debug("Serialized message {0} to buffer size {1}", message.Header, buffer.LengthBytes);
+
+            return buffer;
         }
 
         public void LoginAccept(int id, Vector3 startPosition, Quaternion rotation, int simulationSize, HeroController hero)
@@ -46,7 +68,7 @@ namespace Silentor.TB.Server.Network
             _connection.Tag = hero;
             _server.Send(message, this);
 
-            Log.Info("<-... Send login acceptation for {0}", id);
+            Log.Info("...<- Sending login acceptation for {0}", id);
         }
 
         public void SendPosition(int id, Vector3 position, Quaternion rotation, bool isRemoved = false)
@@ -54,7 +76,7 @@ namespace Silentor.TB.Server.Network
             var playerPosition = new EntityUpdate(id, position.ToProtoVector(), rotation.ToProtoQuaternion(), isRemoved);
             _server.Send(playerPosition, this);
 
-            Log.Info("<-... Send new position {0}", playerPosition);
+            Log.Info("...<- Sending new position {0}", playerPosition);
         }
 
         /// <summary>
@@ -64,7 +86,7 @@ namespace Silentor.TB.Server.Network
         public void SendChunk(ChunkContents chunkData)
         {
             _server.Send(new ChunkMessage(chunkData), this);
-            Log.Info("<-... Send chunk {0}", chunkData.Position);
+            Log.Info("...<- Sending chunk {0}", chunkData.Position);
         }
 
         /// <summary>
@@ -150,16 +172,6 @@ namespace Silentor.TB.Server.Network
         //    _streamsToSend.Enqueue(stream);
         //}
 
-        public NetOutgoingMessage CreateSendBuffer(int size)
-        {
-            return _client.CreateMessage(size);
-        }
-
-        public NetOutgoingMessage CreateSendBuffer()
-        {
-            return _client.CreateMessage();
-        }
-
         public void Close()
         {
             _connection.Disconnect("Client closed");
@@ -168,45 +180,28 @@ namespace Silentor.TB.Server.Network
 
         public override string ToString()
         {
-            return String.Format("Session from {0}", Connection.RemoteEndPoint);
-        }
-
-        /// <summary>
-        /// Hero action, needs urgent processing
-        /// </summary>
-        public event Action<Message> HeroActionReceived;
-
-        /// <summary>
-        /// Client request, not so urgent
-        /// </summary>
-        public ISourceBlock<ClientRequest> ClientRequestReceived
-        {
-            get { return _clientRequests; }
+            return String.Format("Client {0} to {1}", _id, Connection.RemoteEndPoint);
         }
 
         private readonly NetConnection _connection;
         private readonly Server _server;
+        private readonly int _id;
         private readonly NetPeer _client;
         private readonly MessageSerializer _serializer;
         private readonly BufferBlock<ClientRequest> _clientRequests = new BufferBlock<ClientRequest>();
 
-        //Streaming send stuff
-        private readonly ConcurrentQueue<byte[]> _streamsToSend = new ConcurrentQueue<byte[]>();
-        private byte[] _currentStream;
-        private int _currentStreamPosition;
-        private readonly int _packetLenght;
-        private readonly int _headerPacketLenght;
-        private readonly byte[] _packetBuffer;
-
-        private static int _clientCounter = 0;
         private readonly Logger Log;
 
+        /// <summary>
+        /// Dispatch message to player controller
+        /// </summary>
+        /// <param name="msg"></param>
         void IMessageReceiver.Receive(Message msg)
         {
-            if (msg is HeroMovement)
-                HeroActionReceived(msg);
+            if (msg is HeroAction)
+                HeroActionReceived((HeroAction)msg);            //Call sync
             else if(msg is ClientRequest)
-                _clientRequests.Post((ClientRequest)msg);
+                _clientRequests.Post((ClientRequest)msg);       //Send to queue
             else 
                 Log.Error("Received unknown message {0}", msg);
         }

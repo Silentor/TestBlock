@@ -26,10 +26,10 @@ namespace Silentor.TB.Server.Players
             Log = LogManager.GetLogger(GetType().FullName + player.Id);
 
             //Processing of not urgent client requests
-            _clientRequestProcessBlock = new ActionBlock<ClientRequest>(msg => ProcessClientRequest(msg), 
-                new ExecutionDataflowBlockOptions {SingleProducerConstrained = true});
+            _clientRequestProcessBlock = new ActionBlock<ClientRequest>(msg => ProcessClientRequest(msg),
+                new ExecutionDataflowBlockOptions { SingleProducerConstrained = true });
 
-            //Setup client event handlers
+            //Subscribe to client events
             Client = client;
             Client.HeroActionReceived += ProcessAction;
             Client.ClientRequestReceived.LinkTo(_clientRequestProcessBlock, new DataflowLinkOptions());
@@ -42,7 +42,7 @@ namespace Silentor.TB.Server.Players
             _lastChunkPosition = Chunk.ToChunkPosition(Player.Position.ToMapPosition());
         }
 
-        private async void ProcessAction(Message message)
+        private void ProcessAction(Message message)
         {
             switch (message.Header)
             {
@@ -55,7 +55,11 @@ namespace Silentor.TB.Server.Players
                             Player.Jump();
                     }
                     break;
-                
+                default:
+                    {
+                        Log.Error("Unknown message header {0}", message.Header);
+                    }
+                    break;
             }
         }
 
@@ -96,7 +100,7 @@ namespace Silentor.TB.Server.Players
         }
 
         private Vector2i _lastChunkPosition;
-        
+
         private IEnumerable<IPlayer> _oldSensed = new IPlayer[0];
         private readonly Logger Log;
         private readonly ActionBlock<ClientRequest> _clientRequestProcessBlock;
@@ -122,12 +126,12 @@ namespace Silentor.TB.Server.Players
             switch (msg.Header)
             {
                 case Headers.GetChunk:
-                {
-                    var data = (ChunkRequestMessage)msg;
-                    var chunk = await Map.GetChunkAsync(data.Position);
-                    if (chunk != null)
-                        Client.SendChunk(chunk.ToChunkContents());
-                }
+                    {
+                        var data = (ChunkRequestMessage)msg;
+                        var chunk = await Map.GetChunkAsync(data.Position);
+                        if (chunk != null)
+                            Client.SendChunk(chunk.ToChunkContents());
+                    }
                     break;
 
                 default:

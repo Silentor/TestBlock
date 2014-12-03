@@ -34,7 +34,7 @@ namespace Silentor.TB.Common.Maps.Blocks
         public const byte EmptyID = AirID;
         public const byte NullID = 255;
 
-        private static Logger Log = LogManager.GetLogger("Common.Maps.BlockSet");
+        private static Logger Log = LogManager.GetCurrentClassLogger();
 
 #pragma warning restore 1591
 

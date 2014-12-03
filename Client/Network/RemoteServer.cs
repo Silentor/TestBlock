@@ -47,7 +47,7 @@ namespace Silentor.TB.Client.Network
             _applicationEvents.FrameTick += ApplicationEventsFrameTick;
             _applicationEvents.Closed += ApplicationEventsOnClosed;
 
-            _serializer = new MessageSerializer(size => _connection.CreateMessage(size));
+            _serializer = new MessageSerializer(new MessageFactory());
 
             Log.Info("Server started");
         }
@@ -109,7 +109,8 @@ namespace Silentor.TB.Client.Network
 
         private void SendMessage(Message msg)
         {
-            var buffer = (NetOutgoingMessage)_serializer.Serialize(msg);
+            var buffer = _connection.CreateMessage(MessageSerializer.HeaderSize + msg.Size);
+            buffer = _serializer.Serialize(msg, buffer);
             _connection.SendMessage(buffer, msg.Delivery.Method, msg.Delivery.Channel);
         }
 
@@ -192,8 +193,7 @@ namespace Silentor.TB.Client.Network
                         //    im.DeliveryMethod == NetDeliveryMethod.ReliableOrdered)
                         //    ProcessStreamMessage(im);
                         //else
-                        var isCompressed = Settings.Chunk.IsSameAs(im);
-                        ProcessDataMessage(im, isCompressed);
+                        ProcessDataMessage(im);
                         break;
 
                     default:
@@ -254,7 +254,7 @@ namespace Silentor.TB.Client.Network
         //    }
         //}
         
-        private void ProcessDataMessage(NetIncomingMessage im, bool isCompressed = false)
+        private void ProcessDataMessage(NetIncomingMessage im)
         {
             var message = _serializer.Deserialize(im);
 
@@ -265,7 +265,7 @@ namespace Silentor.TB.Client.Network
                     DoLogined(loginData);
                     break;
 
-                case Headers.ChunkResponce:
+                case Headers.ChunkMessage:
                     var chunkData = (ChunkMessage)message;
                     var chunkContent = new ChunkContents(chunkData.Position, chunkData.Blocks, chunkData.HeightMap);
                     DoChunkReceived(chunkContent);

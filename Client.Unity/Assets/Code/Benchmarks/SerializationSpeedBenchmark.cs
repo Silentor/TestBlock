@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using ModestTree;
 using Silentor.TB.Common.Config;
 using Silentor.TB.Common.Maps.Blocks;
 using Silentor.TB.Common.Maps.Geometry;
@@ -19,7 +20,7 @@ namespace Assets.Code.Benchmarks
         {
             print("Stopwatch: freq " + Stopwatch.Frequency + ", is high resolution " + Stopwatch.IsHighResolution);
 
-            _serializer = new MessageSerializer();
+            _serializer = new MessageSerializer(new MessageFactory());
 
             //Warm up
             for (int i = 0; i < 10; i++)
@@ -34,8 +35,7 @@ namespace Assets.Code.Benchmarks
         {
             while (true)
             {
-                InternalBench();
-                yield return new WaitForSeconds(1);
+                yield return StartCoroutine(InternalBench());
             }
         }
 
@@ -46,7 +46,7 @@ namespace Assets.Code.Benchmarks
             public Bounds2i Bounds { get; private set; }
         }
 
-        void InternalBench()
+        IEnumerator InternalBench()
         {
             //Init environment
             var blockSet = new BlockSet();
@@ -56,13 +56,28 @@ namespace Assets.Code.Benchmarks
             var generator = new TestGenerator(wrld, blockSet);
             var first = generator.GenerateSync(Vector2i.Zero);
 
+            int length;
+           
+            //Test compressed ser/deser
             var sw = Stopwatch.StartNew();
-            var buffer = _serializer.Serialize(new ChunkMessage(first));
+            var buffer = _serializer.Serialize(new ChunkMessage(first), out length, true);
             var second = _serializer.Deserialize(buffer);
+            var time = sw.ElapsedMilliseconds;
 
-            print("Serialized/deserialized time: " + sw.ElapsedMilliseconds + " ms, data size: " + buffer.LengthBytes);
+            print("Compressed serialized/deserialized time: " + time + " ms, data size: " + length);
+
+            yield return new WaitForSeconds(0.5f);
+
+            //Test compressed ser/deser
+            sw.Reset();
+            sw.Start();
+            buffer = _serializer.Serialize(new ChunkMessage(first), out length, false);
+            second = _serializer.Deserialize(buffer);
+            time = sw.ElapsedMilliseconds;
+
+            print("Uncompressed serialized/deserialized time: " + time + " ms, data size: " + length);
+
+            yield return new WaitForSeconds(0.5f);
         }
-
-    
     }
 }

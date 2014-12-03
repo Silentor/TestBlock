@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using NLog;
 using Silentor.TB.Common.Config;
@@ -13,20 +15,34 @@ namespace Silentor.TB.Server.Maps
     /// <summary>
     /// Main storage for all used chunk. <see cref="Map"/> classes gets Chunks from Globe.
     /// Retreives chunk from himself, generator or cache, discards unused chunks to cache
-    /// Based on flat array for now, on quadtree for future
+    /// Based on dictionary for now, on quadtree for future
     /// </summary>
     public class Globe
     {
         public readonly Bounds2i Bounds;
 
-        public event Action<Chunk> ChunkAdded;
+        /// <summary>
+        /// All players of the world
+        /// </summary>
+        public IReadOnlyList<HeroController> Players
+        {
+            get
+            {
+                if (_playersChanged)
+                    lock (_players)
+                        if (_playersChanged)
+                            _playersCache = _players.ToArray();
+
+                return _playersCache;
+            }
+        }
 
         public Globe(IGlobeConfig globe, IBlockSet blockSet)
         {
             Bounds = globe.Bounds;
             _generator = new Hills(globe, blockSet);
-            _sizeX = Bounds.Size.X;
-            _chunks = new Chunk[Bounds.Size.X * Bounds.Size.Z];  //todo should be some spatial optimized data structure
+            //_sizeX = Bounds.Size.X;
+            _chunks = new ConcurrentDictionary<Vector2i, Chunk>();  //todo should be some spatial optimized data structure
         }
 
         /// <summary>
@@ -39,38 +55,50 @@ namespace Silentor.TB.Server.Maps
             if (!Bounds.Contains(position)) return null;
 
             //Check globe cache
-            var result = _chunks[Position2Index(position.X, position.Z)];
-            if (result != null)
+            Chunk result;
+            if(_chunks.TryGetValue(position, out result))
                 return result;
 
             //Chunk is not in globe - generate it and place to globe
             var newChunkData = await _generator.Generate(position);
             var newChunk = new Chunk(666, newChunkData);
-            _chunks[Position2Index(position.X, position.Z)] = newChunk;
+            _chunks[position] = newChunk;
             return newChunk;
         }
 
-        private int Position2Index(int x, int z)
+        public void AddPlayer(HeroController player)
         {
-            return x*Bounds.Size.X + z;
+            lock (_players)
+            {
+                Debug.Assert(!_players.Contains(player));
+
+                _players.Add(player);
+                _playersChanged = true;
+            }
+
+            Log.Debug("Added player {0} to gameworld", player.Player.Name);
         }
 
-        private void DoChunkAdded(Chunk chunk)
+        public void RemovePlayer(HeroController player)
         {
-            var handler = ChunkAdded;
-            if (handler != null)
-                handler(chunk);
+            lock (_players)
+            {
+                Debug.Assert(_players.Contains(player));
+
+                _players.Remove(player);
+                _playersChanged = true;
+            }
+
+            Log.Debug("Removed player {0} from gameworld", player.Player.Name);
         }
 
-        //private readonly Dictionary<Vector2i, ChunkContents> _cache = new Dictionary<Vector2i, ChunkContents>();
-
-        //Currently used chunks
-        private readonly Chunk[] _chunks;
+        private readonly ConcurrentDictionary<Vector2i, Chunk> _chunks;
 
         private readonly IChunkGenerator _generator;
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public readonly List<Player> Entities = new List<Player>();
-        private int _sizeX;
+        private readonly List<HeroController> _players = new List<HeroController>();
+        private bool _playersChanged = true;
+        private IReadOnlyList<HeroController> _playersCache;
     }
 }

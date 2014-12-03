@@ -4,7 +4,7 @@ using Silentor.TB.Common.Network.Serialization;
 
 namespace Silentor.TB.Common.Network.Messages
 {
-    public class HeroMovement : PlayerAction
+    public class HeroMovement : HeroAction
     {
         public HeroMovement(ProtoVector3 movement, ProtoVector2 rotation, bool jump)
         {
@@ -37,13 +37,11 @@ namespace Silentor.TB.Common.Network.Messages
 
         public override int Size
         {
-            get { return 1 + 12 + 16 + 1; }
+            get { return 12 + 16 + 1; }
         }
 
-        public override void Serialize(NetBuffer buffer)
+        internal override void Serialize(NetBuffer buffer)
         {
-            base.Serialize(buffer);             //1
-
             buffer.Write(Movement);             //12
             buffer.Write(Rotation);             //16
             buffer.Write(Jump);                 //1

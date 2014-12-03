@@ -7,7 +7,7 @@ using LZ4s;
 
 namespace Silentor.TB.Common.Network.Compression
 {
-    public static class LZ4Encrypter
+    public static class LZ4Wrapper
     {
         private const int WRAP_OFFSET_0 = 0;
         private const int WRAP_OFFSET_4 = sizeof(int);

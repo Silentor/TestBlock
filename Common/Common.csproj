@@ -57,13 +57,15 @@
     <Compile Include="Exceptions\CommonException.cs" />
     <Compile Include="Exceptions\TaskException.cs" />
     <Compile Include="Maps\Chunks\ChunkContents.cs" />
-    <Compile Include="Network\Compression\LZ4Encrypter.cs" />
+    <Compile Include="Network\Compression\LZ4Wrapper.cs" />
     <Compile Include="Network\Messages\ChunkRequestMessage.cs" />
     <Compile Include="Network\Messages\EntityUpdate.cs" />
+    <Compile Include="Network\Messages\TestMessage.cs" />
     <Compile Include="Network\Serialization\HeaderAttribute.cs" />
     <Compile Include="Network\Messages\HeroMovement.cs" />
     <Compile Include="Network\DeliveryMethod.cs" />
     <Compile Include="Network\Messages\StreamHeader.cs" />
+    <Compile Include="Network\Serialization\MessageFactory.cs" />
     <Compile Include="Network\Serialization\NetBufferExtensions.cs" />
     <Compile Include="Network\Serialization\MessageSerializer.cs" />
     <Compile Include="Network\Settings.cs" />

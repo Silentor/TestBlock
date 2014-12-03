@@ -59,7 +59,7 @@ namespace Silentor.TB.Client.Storage
         private int _newestAccessTime;
         private readonly Queue<ChunkContents> _storeQueue = new Queue<ChunkContents>();
         private readonly Queue<StoredChunk> _retrieveQueue = new Queue<StoredChunk>();
-        private readonly MessageSerializer _serializer = new MessageSerializer();
+        private readonly MessageSerializer _serializer = new MessageSerializer(new MessageFactory());
 
         private void DoRetrieved(ChunkContents chunk)
         {

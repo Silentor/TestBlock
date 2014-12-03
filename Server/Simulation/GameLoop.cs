@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using NLog;
 using Silentor.TB.Server.Time;
 
@@ -26,33 +27,37 @@ namespace Silentor.TB.Server.Simulation
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly Timer _timer;
 
-        private void OnTimePhysicTick(Time.Timer timer)
+        private void OnTimePhysicTick(Timer timer)
         {
             var startTime = timer.TimeMs;
-            SimulatePlayers();
+            var simulatedCount = SimulatePlayers();
             var playersTime = timer.TimeMs;
 
-            Log.Trace("{1} players simulated for {0} ms", playersTime - startTime, _world.Players.Count);
+            Log.Trace("{1} players simulated for {0} ms", playersTime - startTime, simulatedCount);
         }
 
-        private void SimulatePlayers()
+        private int SimulatePlayers()
         {
+            var players = _world.Globes.First().Players;
+
             //Simulate one step of physic
-            if(_world.Players.Count > 16)
-                Parallel.ForEach(_world.Players, playerController => playerController.Simulate());
+            if (players.Count > 16)
+                Parallel.ForEach(players, playerController => playerController.Simulate());
             else
-                foreach (var simulator in _world.Players)
+                foreach (var simulator in players)
                     simulator.Simulate();
 
             //Entity collision resolve
             //...
 
             //Update controllers for result of simulation
-            if (_world.Players.Count > 16)
-                Parallel.ForEach(_world.Players, playerController => playerController.Update());
+            if (players.Count > 16)
+                Parallel.ForEach(players, playerController => playerController.Update());
             else
-                foreach (var playerController in _world.Players)
+                foreach (var playerController in players)
                     playerController.Update();
+
+            return players.Count;
         }
 
     }

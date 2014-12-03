@@ -29,13 +29,11 @@ namespace Silentor.TB.Common.Network.Messages
 
         public override int Size
         {
-            get { return 1 + 8; }
+            get { return 8; }
         }
 
-        public override void Serialize(NetBuffer buffer)
+        internal override void Serialize(NetBuffer buffer)
         {
-            base.Serialize(buffer);             //1
-
             buffer.Write(Position);             //8
         }
     }

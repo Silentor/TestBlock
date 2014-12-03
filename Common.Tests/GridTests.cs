@@ -3,8 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using Silentor.TB.Common.Maps.Geometry;
 
-
-namespace Silentor.Common.Tests
+namespace Silentor.TB.Common.Tests
 {
     [TestFixture]
     public class GridTests

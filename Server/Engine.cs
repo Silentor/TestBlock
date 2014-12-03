@@ -24,7 +24,7 @@ namespace Silentor.TB.Server
         /// <param name="server"></param>
         /// <param name="world"></param>
         /// <param name="timer"></param>
-        public Engine(Silentor.TB.Server.Network.Server server, World world, Timer timer)
+        public Engine(Network.Server server, World world, Timer timer)
         {
             Log.Trace("Start engine");
             
@@ -32,12 +32,12 @@ namespace Silentor.TB.Server
             _world = world;
             _timer = timer;
 
+            //Link engine message processing to server
             _dispatch = new ActionBlock<IncomingEnvelop>(im => DispatchMessages(im));
-
-            server.EngineMessageReceived.Subscribe(_dispatch.AsObserver());
+            server.EngineMessageReceived.LinkTo(_dispatch);
         }
 
-        private async Task DispatchMessages(IncomingEnvelop envelop)
+        private void DispatchMessages(IncomingEnvelop envelop)
         {
             Log.Trace("Dispatching message {0}", envelop.Message.Header);
 
@@ -86,10 +86,10 @@ namespace Silentor.TB.Server
             var map = new Map(sessionId, startGlobe, mapBounds);
 
             //Create player and his proxy
-            var player = new Player(sessionId, data.Name, map, _timer, playerStartPosition, _world);    //todo World reference must be removed
+            var player = new Player(sessionId, data.Name, map, _timer, playerStartPosition);
             var playerController = new HeroController(client, player, map);
 
-            _world.AddPlayer(playerController);
+            startGlobe.AddPlayer(playerController);
 
             //Confirm login
             client.LoginAccept(player.Id, player.Position, Quaternion.Identity, Simulator.SimulationWindowRadius, playerController);
@@ -102,14 +102,14 @@ namespace Silentor.TB.Server
             //Close not network parts of simulator...
 
             //Remove player from gameworld and close network stuff
-            _world.RemovePlayer(hero);
+            hero.Map.Globe.RemovePlayer(hero);
             hero.Client.Close();
             hero.Dispose();
         }
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        private readonly Silentor.TB.Server.Network.Server _server;
+        private readonly Network.Server _server;
         private readonly World _world;
         private readonly Timer _timer;
         private int _sessionIdCounter;

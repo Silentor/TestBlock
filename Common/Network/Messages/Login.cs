@@ -34,13 +34,11 @@ namespace Silentor.TB.Common.Network.Messages
 
         public override int Size
         {
-            get { return 1 + Encoding.UTF8.GetByteCount(Name); }
+            get { return Encoding.UTF8.GetByteCount(Name); }
         }
 
-        public override void Serialize(NetBuffer buffer)
+        internal override void Serialize(NetBuffer buffer)
         {
-            base.Serialize(buffer);                 //1
-
             buffer.Write(Name);                     //?
         }
     }
@@ -95,13 +93,11 @@ namespace Silentor.TB.Common.Network.Messages
 
         public override int Size
         {
-            get { return 1 + 4 + 12 + 16 + 4; }
+            get { return 4 + 12 + 16 + 4; }
         }
 
-        public override void Serialize(NetBuffer buffer)
+        internal override void Serialize(NetBuffer buffer)
         {
-            base.Serialize(buffer);                 //1
-
             buffer.Write(Id);                       //4 
             buffer.Write(Position);                 //12
             buffer.Write(Rotation);                 //16
@@ -120,7 +116,12 @@ namespace Silentor.TB.Common.Network.Messages
 
         public override int Size
         {
-            get { return 1; }
+            get { return 0; }
+        }
+
+        internal override void Serialize(NetBuffer buffer)
+        {
+            //Empty            
         }
     }
 }

@@ -23,12 +23,11 @@ namespace Silentor.TB.Server.Players
         private Player[] _cachedCollect;
         
 
-        public Sensor(Map map, World world, int range, Time.Timer timer, Player owner)
+        public Sensor(Map map, int range, Time.Timer timer, Player owner)
         {
             _map = map;
             _range = range;
             _timer = timer;
-            _world = world;             //todo Instead of World use Globe!
             _owner = owner;
         }
 
@@ -44,7 +43,7 @@ namespace Silentor.TB.Server.Players
                 var lookBound = new Bounds3i(_owner.Position.ToMapPosition(), _range);
 
                 var targets = new List<Player>();
-                var allEntities = _world.Players;
+                var allEntities = _map.Globe.Players;
                 foreach (var entity in allEntities)
                 {
                     if (lookBound.Contains(entity.Player.Position.ToMapPosition()) && entity.Player != _owner)

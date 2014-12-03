@@ -29,10 +29,14 @@ namespace Silentor.TB.Client.Debug
 
         void Start()
         {
-            var container = FindObjectOfType<CompositionRoot>().Container;
-            _server = container.Resolve<IServer>();
+            var compositionRoot = FindObjectOfType<CompositionRoot>();
+            if (compositionRoot != null)
+            {
+                var container = compositionRoot.Container;
+                _server = container.Resolve<IServer>();
 
-            StartCoroutine(UpdateLabel());
+                StartCoroutine(UpdateLabel());
+            }
         }
 
         IEnumerator UpdateLabel()

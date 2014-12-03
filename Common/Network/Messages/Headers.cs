@@ -10,13 +10,13 @@
 
         //Chunks
         GetChunk,
-        ChunkResponce,
+        ChunkMessage,
         StreamHeader,
 
         //Players
         EntityUpdate,
         HeroMovement,
         
-        Test = 255
+        Test = 120
     }
 }

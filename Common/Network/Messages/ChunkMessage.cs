@@ -16,15 +16,20 @@ namespace Silentor.TB.Common.Network.Messages
 
         public BlockData[] Blocks { get; private set; }
 
-        [Header(Headers.ChunkResponce)]
+        [Header(Headers.ChunkMessage)]
         public override Headers Header
         {
-            get { return Headers.ChunkResponce; }
+            get { return Headers.ChunkMessage; }
         }
 
         public override int Size
         {
-            get { return 1 + 8 + 256 + 32768*2; }
+            get { return 8 + 256 + 32768*2; }
+        }
+
+        public override bool Compressible
+        {
+            get { return true; }
         }
 
         public override DeliveryMethod Delivery { get { return Settings.Chunk; } }
@@ -52,8 +57,6 @@ namespace Silentor.TB.Common.Network.Messages
         /// </summary>
         internal ChunkMessage(NetBuffer buffer)
         {
-            //todo Decompress it firstly
-
             Position = buffer.ReadVector2i();
             HeightMap = buffer.ReadBytes(ChunkContents.SizeX*ChunkContents.SizeZ);
 
@@ -66,22 +69,18 @@ namespace Silentor.TB.Common.Network.Messages
                 Blocks[i] = new BlockData(blockBuffer[i*2], blockBuffer[i*2 + 1]);
         }
 
-        public override void Serialize(NetBuffer buffer)
+        internal override void Serialize(NetBuffer buffer)
         {
-            base.Serialize(buffer);                                 //1
-
             buffer.Write(Position);                                 //8
             buffer.Write(HeightMap);                                //256
 
             var blockBuffer = new byte[2* ChunkContents.BlocksCount];
             for (var i = 0; i < ChunkContents.BlocksCount; i++)
             {
-                blockBuffer[i] = Blocks[i * 2].Id;
-                blockBuffer[i + 1] = Blocks[i * 2 + 1].Data;
+                blockBuffer[i*2] = Blocks[i].Id;
+                blockBuffer[i*2 + 1] = Blocks[i].Data;
             }
             buffer.Write(blockBuffer);                              //32768 * 2
-
-            //todo Compress it!
         }
 
         public override string ToString()

@@ -23,29 +23,33 @@ namespace Silentor.TB.Server.Network
     public class Server
     {
         /// <summary>
-        /// Fires on game engine message received
+        /// Source of game engine messages
         /// </summary>
-        public IObservable<IncomingEnvelop> EngineMessageReceived
+        public ISourceBlock<IncomingEnvelop> EngineMessageReceived
         {
-            get { return _decodeToConsumer.AsObservable(); }
+            get { return _decodeToConsumer; }
         }
 
         public Server(int port = 10000, int securityPort = 9999)
         {
+            _serializer = new MessageSerializer(_messageFactory);
+
+            //Start Lidgren server
             var config = new NetPeerConfiguration(Settings.AppIdentifier);
             config.MaximumConnections = 100;
             config.Port = port;
             _server = new NetServer(config);
             _server.Start();
 
+            //Setup Unity web security socket
             SetupSecurity(((IPEndPoint)_server.Socket.LocalEndPoint).Address, securityPort);
 
             Log.Info("Server starting at port {0}", _server.Port);
 
-            //Create receiving workers
+            //Create receive worker
             _networkWorker = new Thread(ReadMessages)
             {
-                Name = "Wob.Server.Network.Server.ReadMessages",
+                Name = GetType().Name + "ReadMessages()",
                 IsBackground = true,
                 Priority = ThreadPriority.Normal
             };
@@ -71,7 +75,7 @@ namespace Silentor.TB.Server.Network
 
         public Client CreateClient(NetConnection connection, int sessionId)
         {
-            var newClient = new Client(connection, this, sessionId);
+            var newClient = new Client(connection, this, _messageFactory, sessionId);
             return newClient;
         }
 
@@ -202,7 +206,8 @@ namespace Silentor.TB.Server.Network
         /// Decode and dispatch received messages. Dispatched by block links. Threadsafe.
         /// </summary>
         /// <param name="im"></param>
-        /// <returns></returns>
+        /// <returns>Client actions propagates to Client, Engine messages buffered to <see cref="EngineMessageReceived"/>,
+        /// other messages dropped as faulty</returns>
         private IncomingEnvelop DecodeMessages(NetIncomingMessage im)
         {
             Log.Trace("Decoding message {0}", im);
@@ -217,7 +222,7 @@ namespace Silentor.TB.Server.Network
                         if (status == NetConnectionStatus.Connected)
                         {
                             //Ok, just waiting for proper login
-                            Log.Info("Connected from {0}, waiting for login", im.SenderConnection);
+                            Log.Debug("Connected from {0}, waiting for login", im.SenderConnection);
                         }
                         else if (status == NetConnectionStatus.Disconnected)
                         {
@@ -280,6 +285,7 @@ namespace Silentor.TB.Server.Network
                 throw;
             }
 
+            //Create faulty message for dropping
             return new IncomingEnvelop(){RecvBuffer = im };
         }
 
@@ -307,10 +313,7 @@ namespace Silentor.TB.Server.Network
         {
             try
             {
-                //var serializer = GetSerializer();
-                var sendBuffer = envelope.Client.CreateSendBuffer(envelope.Message.Size);
-                envelope.Message.Serialize(sendBuffer);
-                envelope.SendBuffer = sendBuffer;
+                envelope.SendBuffer = envelope.Client.Serialize(envelope.Message);
 
                 return envelope;
             }
@@ -339,8 +342,7 @@ namespace Silentor.TB.Server.Network
                     if (freeWindowSlots > 0)
                     {
                         var result = envelope.Client.Connection.SendMessage(envelope.SendBuffer,
-                            envelope.Message.Delivery.Method,
-                            envelope.Message.Delivery.Channel);
+                            envelope.Message.Delivery.Method, envelope.Message.Delivery.Channel);
                         if (result == NetSendResult.Dropped || result == NetSendResult.FailedNotConnected)
                             Log.Error("Message was not send, result: " + result);
                         break;
@@ -357,11 +359,32 @@ namespace Silentor.TB.Server.Network
         } 
         #endregion
 
+        private readonly NetServer _server;
+        private readonly Thread _networkWorker;
+
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private readonly MessageSerializer _serializer;
+        private readonly MessageFactory _messageFactory = new MessageFactory();
+
+        private bool _isStopping;
+        private int _errorPacketsCount;
+
+        /// <summary>
+        /// Unity Web security responce
+        /// </summary>
+        private const string SocketPolicy = @"
+<?xml version=""1.0""?>
+<cross-domain-policy>
+   <allow-access-from domain=""*"" to-ports=""9998-10001""/> 
+</cross-domain-policy>";
+
+        private TcpListener _securitySocket;
+
         private void SetupSecurity(IPAddress local, int port)
         {
             _securitySocket = new TcpListener(local, port);
             _securitySocket.Start();
-            Task.Run(() => ProcessSecurity());
+            Task.Run((Action) ProcessSecurity);
         }
 
         private async void ProcessSecurity()
@@ -375,30 +398,6 @@ namespace Silentor.TB.Server.Network
                 newClient.Close();
             }
         }
-
-        /// <summary>
-        /// Unity Web security responce
-        /// </summary>
-        private const string SocketPolicy = @"
-<?xml version=""1.0""?>
-<cross-domain-policy>
-   <allow-access-from domain=""*"" to-ports=""9998-10001""/> 
-</cross-domain-policy>";
-        
-
-        private readonly NetServer _server;
-        private readonly Thread _networkWorker;
-
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        private readonly List<Client> _clients = new List<Client>();
-        private readonly MessageSerializer _serializer = new MessageSerializer();
-
-        //Pool of message encode/decode serializers
-        //private readonly ConcurrentBag<CommandSerializer> _serializers = new ConcurrentBag<CommandSerializer>();
-
-        private bool _isStopping;
-        private int _errorPacketsCount;
-        private TcpListener _securitySocket;
 
         public struct Statistic
         {

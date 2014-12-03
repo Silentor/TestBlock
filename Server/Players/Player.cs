@@ -35,19 +35,23 @@ namespace Silentor.TB.Server.Players
 
         public bool IsRotationChanged { get; private set; }
 
-        public event Action<Vector3> PositionChanged;
-
         public Sensor Sensor { get; private set; }
 
-        public Player(int id, string name, Map map, Time.Timer timer, Vector3 startPosition, World world)
+        public event Action<Vector3> PositionChanged;
+
+        public Player(int id, string name, Map map, Time.Timer timer, Vector3 startPosition)
         {
             Id = id;
             Name = name;
             Position = startPosition;
             _map = map;
-            Sensor = new Sensor(map, world, 16, timer, this);
+            Sensor = new Sensor(map, 16, timer, this);
         }
 
+        /// <summary>
+        /// Set desired accelertion
+        /// </summary>
+        /// <param name="accel">Normalized acceleration vector (rotation independent)</param>
         public void SetAcceleration(Vector3 accel)
         {
             if (accel != Vector3.Zero)
@@ -92,7 +96,7 @@ namespace Silentor.TB.Server.Players
 
             if (currentChunk == null) return;
 
-            //Calc G-accel
+            //Check if there is ground under feet
             var localBlockPos = Chunk.ToLocalPosition(blockPos);
             if (Chunk.IsCorrectLocalPosition(localBlockPos + Vector3i.Down) && currentChunk.GetBlock(localBlockPos + Vector3i.Down).IsEmpty)
             {
@@ -109,6 +113,7 @@ namespace Silentor.TB.Server.Players
                 }
             }
 
+            //Simulate movement (or falling)
             if (_isFreeFall)
             {
                 var newVelocity = _freeFallVelocity + GAcceleration*Time.Timer.DeltaTime;
@@ -116,7 +121,7 @@ namespace Silentor.TB.Server.Players
             }
             else
             {
-                //Calc move velocity
+                //Slow character down
                 if (_isStopMode)
                 {
                     if (_velocity.Length() > AccelerationValue*Time.Timer.DeltaTime)
@@ -126,19 +131,21 @@ namespace Silentor.TB.Server.Players
                         _velocity = Vector3.Zero;
                         _isStopMode = false;
                     }
-                }
+                }//Accelerate character
                 else
                 {
                     var newVelocity = _velocity + _acceleration*Time.Timer.DeltaTime;
                     _velocity = newVelocity.ClampMagnitude(MaxVelocity);
                 }
 
+                //Add jump velocity if necessary
                 if (_jump)
                 {
                     _jump = false;
                     _freeFallVelocity += JumpVelocity;
                 }
             }
+
 
             Position += (_velocity + _freeFallVelocity) * Time.Timer.DeltaTime;
 

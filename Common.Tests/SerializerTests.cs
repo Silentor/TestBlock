@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using FluentAssertions;
 using Lidgren.Network;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
@@ -15,67 +16,60 @@ namespace Silentor.TB.Common.Tests
     public class SerializerTests
     {
         private MessageSerializer _serializer;
+        private MessageFactory _messageFactory;
 
         [TestFixtureSetUp]
         public void Init()
         {
-            _serializer = new MessageSerializer();
-            _serializer.AddMessageHeader<TestMessage>(Headers.Test);
+            _messageFactory = new MessageFactory();
+            _messageFactory.AddCustomMessage<TestMessage>();
+
+            _serializer = new MessageSerializer(_messageFactory);
         }
 
+        /// <summary>
+        /// Test serialization/deserialization of some good compressible data
+        /// </summary>
+        /// <param name="isCompressed"></param>
         [TestCase(true)]
         [TestCase(false)]
         public void TestCompressibleStream(bool isCompressed)
         {
-            var data = GenerateCompressibleData(98580);
+            var data = GenerateCompressibleData(100);
 
-            var startData = data.ToArray();
-            var cmd = new TestMessage(startData);
+            var cmd = new TestMessage(data);
             int size;
-            var serialized = _serializer.Serialize(cmd, out size);
+            var serialized = _serializer.Serialize(cmd, out size, isCompressed);
             Array.Resize(ref serialized, size);
 
             var cmd2 = (TestMessage)_serializer.Deserialize(serialized);
 
-            Assert.That(cmd.Data, Is.EqualTo(startData));
-            Assert.That(cmd2.Data, Is.EqualTo(startData));
+            Assert.That(cmd.Data, Is.EqualTo(data));
+            Assert.That(cmd2.Data, Is.EqualTo(data));
         }
 
+        /// <summary>
+        /// Test serialization/deserialization of some very bad compressible data
+        /// </summary>
+        /// <param name="isCompressed"></param>
         [TestCase(true)]
         [TestCase(false)]
         public void TestUncompressibleStream(bool isCompressed)
         {
-            var data = GenerateNoncompressibleData(98580);
+            var data = GenerateNoncompressibleData(100);
 
-            var startData = data.ToArray();
-            var cmd = new TestMessage(startData);
+            var cmd = new TestMessage(data);
             int size;
             var serialized = _serializer.Serialize(cmd, out size);
             Array.Resize(ref serialized, size);
 
             var cmd2 = (TestMessage)_serializer.Deserialize(serialized);
 
-            Assert.That(cmd.Data, Is.EqualTo(startData));
-            Assert.That(cmd2.Data, Is.EqualTo(startData));
+            Assert.That(cmd.Data, Is.EqualTo(data));
+            Assert.That(cmd2.Data, Is.EqualTo(data));
         }
 
         [Test]
-        public void TestBaseClassSerialization()
-        {
-            var cmd = new LoginData("Test");
-            Message baseCmd = cmd;
-
-            int size;
-            var serialized = _serializer.Serialize(baseCmd, out size);
-            var serialized2 = new byte[size];
-            Array.Copy(serialized, serialized2, size);
-
-            var cmd2 = (LoginData)_serializer.Deserialize(serialized2);
-
-            Assert.That(cmd.Name, Is.EqualTo(cmd2.Name));
-        }
-
-        [Ignore]
         public void TestChunkContentSerialization()
         {
             //Arrange
@@ -88,8 +82,35 @@ namespace Silentor.TB.Common.Tests
             var chunkMessage = new ChunkMessage(chunkContent);
 
             //Act
-            //chunkMessage.Serialize();
-            //var serialized = _serializer.Serialize(baseCmd, out size);
+            int serializedSize;
+            var serialized = _serializer.Serialize(chunkMessage, out serializedSize);
+
+            var serialized2 = new Byte[serializedSize];
+            Array.Copy(serialized, serialized2, serializedSize);
+            var chunkMessage2 = (ChunkMessage)_serializer.Deserialize(serialized2);
+
+            //Assert
+            serializedSize.Should().BeLessThan(chunkMessage.Size);           //Because of suggested compression
+            Assert.That(chunkMessage.Header == chunkMessage2.Header);
+            Assert.That(chunkMessage.Position == Vector2i.One);
+            Assert.That(chunkMessage.Position == chunkMessage2.Position);
+            chunkMessage.HeightMap.Should().Equal(chunkMessage2.HeightMap);
+            chunkMessage.Blocks.Should().Equal(chunkMessage2.Blocks);
+        }
+
+        [Test]
+        public void TestNetBufferSerialization()
+        {
+            var data = GenerateNoncompressibleData(100);
+
+            var cmd = new TestMessage(data);
+            var buffer = new NetBuffer();
+            var serialized = _serializer.Serialize(cmd, buffer);
+
+            var cmd2 = (TestMessage)_serializer.Deserialize(serialized);
+
+            Assert.That(cmd.Data, Is.EqualTo(data));
+            Assert.That(cmd2.Data, Is.EqualTo(data));
         }
 
         private byte[] GenerateNoncompressibleData(int size)
@@ -117,7 +138,7 @@ namespace Silentor.TB.Common.Tests
         }
     }
 
-    public class TestMessage : Message
+    public class TestMessage : TestMessageBase
     {
         public TestMessage(byte[] data)
         {
@@ -127,29 +148,27 @@ namespace Silentor.TB.Common.Tests
                 Data = data;
         }
 
-        public TestMessage(NetBuffer buffer)
+        internal TestMessage(NetBuffer buffer)
         {
             var length = buffer.ReadVariableInt32();
             Data = buffer.ReadBytes(length); 
         }
 
-        [Header(Headers.Test)]
+        public readonly byte[] Data = new byte[0];
+
+        [Header(Headers.Test - 1)]
         public override Headers Header
         {
-            get { return Headers.Test; }
+            get { return Headers.Test - 1; }
         }
 
         public override int Size
         {
-            get { return 1 + 4 + Data.Length; }
+            get { return 4 + Data.Length; }
         }
 
-        public byte[] Data = new byte[0];
-
-        public override void Serialize(NetBuffer buffer)
+        protected override void SerializeTest(NetBuffer buffer)
         {
-            base.Serialize(buffer);                         //1
-
             buffer.WriteVariableInt32(Data.Length);         //4
             buffer.Write(Data);                             //?
         }
