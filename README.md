@@ -18,4 +18,8 @@ Build and run
 
 Works for sure on Visual Studio Pro 2013 + Visual Studio Tools for Unity 1.9 + Unity 4.6 (because of new Unity UI)
 
-todo
+History
+------
+
+- 0.1 - Simplest possible noise-based world (hills only), make sure client works in Web-restricted environment. Connect, walk, jump, lookout, disconnect of several hundreds of bots.
+- 0.2 - Implement Voronoi-partitioned world, make graph of world-zones, make some visualization tool of map generation process. Client: render zones in different colors.
