@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using BenTools.Mathematics;
-using Microsoft.Xna.Framework;
 using Silentor.TB.Common.Maps.Geometry;
+using Silentor.TB.Server.Maps.Voronoi;
 using Color = System.Drawing.Color;
-using Point = System.Drawing.Point;
 
 namespace Server.MapGenerationVisualizer
 {
@@ -24,7 +18,7 @@ namespace Server.MapGenerationVisualizer
         }
 
         private IEnumerable<Vector2i> _zonesCoords;
-        private VoronoiGraph _voronoi;
+        private List<GraphEdge> _voronoi;
 
         private IEnumerable<Vector2i> GetZonesCoords()
         {
@@ -58,28 +52,35 @@ namespace Server.MapGenerationVisualizer
             return zonesCoords;
         }
 
-        private VoronoiGraph GetDiagram(IEnumerable<Vector2i> zonesCoords)
+        private List<GraphEdge> BuildVoronoiBurhan(IEnumerable<Vector2i> zonesCoords)
         {
-            //Prepare input
-            var input = new Vector[zonesCoords.Count()];
-            var j = 0;
-            foreach (var zoneCoord in zonesCoords)
+            var voronoi = new Voronoi(0.1);
+
+            //Prepare data
+            var xValues = new double[zonesCoords.Count()];
+            var yValues = new double[zonesCoords.Count()];
+
+            for (int i = 0; i < xValues.Length; i++)
             {
-                input[j++] = new Vector(zoneCoord.X, zoneCoord.Z);
+                xValues[i] = zonesCoords.ElementAt(i).X;
+                yValues[i] = zonesCoords.ElementAt(i).Z;
             }
+
+            var gridSize = (int)udGrid.Value;
+            var zoneMax = gridSize * 16;
 
             //Calc Voronoi
             var timer = Stopwatch.StartNew();
-            var result = Fortune.ComputeVoronoiGraph(input);
+            var result = voronoi.generateVoronoi(xValues, yValues, 0, zoneMax, 0, zoneMax);
             var time = timer.ElapsedMilliseconds;
             timer.Stop();
 
-            Debug.Print("Voronoi calc time: {0} msec", time);
+            Debug.Print("Voronoi by Burhan calc time: {0} msec", time);
 
             return result;
         }
 
-        private void DrawDiagram(IEnumerable<Vector2i> zonesCoord, VoronoiGraph graph)
+        private void DrawDiagram(IEnumerable<Vector2i> zonesCoord, List<GraphEdge> graph)
         {
             var gridSize = (int)udGrid.Value;
             var zoneMax = gridSize * 16;
@@ -117,30 +118,19 @@ namespace Server.MapGenerationVisualizer
             //    g.DrawEllipse(verticePen, (float)vertiz[0], (float)vertiz[1], 1, 1);
             //}
 
-            foreach (var voronoiEdge in graph.Edges)
+            foreach (var voronoiEdge in graph)
             {
-                if (voronoiEdge.IsInfinite) continue;
-
-                if (!voronoiEdge.IsPartlyInfinite)
-                {
-                    var zoomedEdge1 = voronoiEdge.VVertexA * ratio;
-                    var zoomedEdge2 = voronoiEdge.VVertexB * ratio;
-                    g.DrawLine(verticePen, (float)zoomedEdge1[0], (float)zoomedEdge1[1], (float)zoomedEdge2[0], (float)zoomedEdge2[1]);
-                }
-                else
-                {
-                    var calculatedPoint = (voronoiEdge.FixedPoint + voronoiEdge.DirectionVector * 100) * ratio;
-                    var fixedPoint = voronoiEdge.FixedPoint * ratio;
-                    g.DrawLine(infiniteEdgePen, (float)fixedPoint[0], (float)fixedPoint[1],
-                        (float)calculatedPoint[0], (float)calculatedPoint[1]);
-                }
+                var zoomedEdge1 = new PointF((float)voronoiEdge.x1*ratio, (float)voronoiEdge.y1*ratio);
+                var zoomedEdge2 = new PointF((float)voronoiEdge.x2 * ratio, (float)voronoiEdge.y2 * ratio);
+                g.DrawLine(verticePen, zoomedEdge1, zoomedEdge2);
             }
         }
 
         private void Create_Click(object sender, EventArgs e)
         {
             _zonesCoords = GetZonesCoords();
-            _voronoi = GetDiagram(_zonesCoords);
+            //_voronoi = BuildVoronoiBen(_zonesCoords);
+            _voronoi = BuildVoronoiBurhan(_zonesCoords);
             DrawDiagram(_zonesCoords, _voronoi);
         }
 
@@ -150,3 +140,4 @@ namespace Server.MapGenerationVisualizer
         }
     }
 }
+

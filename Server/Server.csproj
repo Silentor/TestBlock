@@ -76,11 +76,8 @@
     <Compile Include="Maps\Generators\IChunkGenerator.cs" />
     <Compile Include="Maps\Generators\Random.cs" />
     <Compile Include="Maps\Generators\Shuffle.cs" />
-    <Compile Include="Maps\VoronoiBen\FortuneVoronoi.cs" />
-    <Compile Include="Maps\VoronoiBen\HashSet.cs" />
-    <Compile Include="Maps\VoronoiBen\PriorityQueue.cs" />
-    <Compile Include="Maps\VoronoiBen\ToolBox.cs" />
-    <Compile Include="Maps\VoronoiBen\Vector.cs" />
+    <Compile Include="Maps\Voronoi\Voronoi.cs" />
+    <Compile Include="Maps\Voronoi\VoronoiElements.cs" />
     <Compile Include="Network\IMessageReceiver.cs" />
     <Compile Include="Network\IncomingEnvelop.cs" />
     <Compile Include="Network\OutgoingEnvelop.cs" />

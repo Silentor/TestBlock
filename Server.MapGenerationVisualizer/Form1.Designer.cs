@@ -67,6 +67,8 @@
             this.cbZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbZoom.FormattingEnabled = true;
             this.cbZoom.Items.AddRange(new object[] {
+            "1",
+            "5",
             "10",
             "25",
             "50",
