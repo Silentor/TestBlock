@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.Client.Unity.CSharp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.MapGenerationVisualizer", "Server.MapGenerationVisualizer\Server.MapGenerationVisualizer.csproj", "{943F1F16-8C0E-4AE6-8B53-8949F08C3209}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Console", "Server.Console\Server.Console.csproj", "{B90C7716-E901-4EA6-92FB-7817A3308CDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +100,10 @@ Global
 		{943F1F16-8C0E-4AE6-8B53-8949F08C3209}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{943F1F16-8C0E-4AE6-8B53-8949F08C3209}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{943F1F16-8C0E-4AE6-8B53-8949F08C3209}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B90C7716-E901-4EA6-92FB-7817A3308CDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B90C7716-E901-4EA6-92FB-7817A3308CDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B90C7716-E901-4EA6-92FB-7817A3308CDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B90C7716-E901-4EA6-92FB-7817A3308CDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,5 +120,6 @@ Global
 		{07C73492-34E6-43D6-A6C4-B2115D3D8E05} = {AD6FB158-4FA3-4778-9C73-34687F49D0A1}
 		{05903FDF-0707-2E8F-00B2-D1236F5757F8} = {AD6FB158-4FA3-4778-9C73-34687F49D0A1}
 		{943F1F16-8C0E-4AE6-8B53-8949F08C3209} = {B62F2E4D-D190-4760-B839-48EE117970E5}
+		{B90C7716-E901-4EA6-92FB-7817A3308CDD} = {B62F2E4D-D190-4760-B839-48EE117970E5}
 	EndGlobalSection
 EndGlobal
