@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,10 +33,10 @@ namespace Silentor.TB.Server.Maps.Voronoi
         /// <param name="count"></param>
         /// <param name="gridSize"></param>
         /// <returns></returns>
-        public static Vector2[] GeneratePoints(int count, int gridSize)
+        public static Vector2[] GeneratePoints(int count, int gridSize, int seed, int minDistance = 0)
         {
             //Prepare input data
-            var rnd = new Random();
+            var rnd = new Random(seed);
             var infiniteLoopChecker = 0;
             var zoneCenterMax = gridSize * 16;
             var chunksGrid = new bool[gridSize, gridSize];
@@ -46,7 +47,7 @@ namespace Silentor.TB.Server.Maps.Voronoi
             {
                 var zoneCenterX = rnd.Next(0, zoneCenterMax);
                 var zoneCenterY = rnd.Next(0, zoneCenterMax);
-                if (!chunksGrid[zoneCenterX / 16, zoneCenterY / 16])
+                if (IsZoneAllowed(chunksGrid, new Vector2i(zoneCenterX / 16, zoneCenterY / 16), minDistance))
                 {
                     chunksGrid[zoneCenterX / 16, zoneCenterY / 16] = true;
                     zonesCoords.Add(new Vector2() { X = zoneCenterX, Y = zoneCenterY });
@@ -61,6 +62,25 @@ namespace Silentor.TB.Server.Maps.Voronoi
             }
 
             return zonesCoords.ToArray();
+        }
+
+        private static bool IsZoneAllowed(bool[,] chunkGrid, Vector2i newZoneCoord, int minDistance)
+        {
+            var gridSize = chunkGrid.GetUpperBound(0);
+
+            for (int x = newZoneCoord.X - minDistance; x <= newZoneCoord.X + minDistance; x++)
+            {
+                for (int z = newZoneCoord.Z - minDistance; z <= newZoneCoord.Z + minDistance; z++)
+                {
+                    if (x < 0 || z < 0 || x >= gridSize || z >= gridSize)
+                        continue;
+
+                    if (chunkGrid[x, z])
+                        return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -154,6 +174,8 @@ namespace Silentor.TB.Server.Maps.Voronoi
                     }
 
                 isCellsClosed[cellIndex] = isCellClosed;
+
+                Debug.Assert(isCellClosed || cellEdges.Count >= 3, "Closed sell with < 3 edges!!");
             }
 
             //Fill result cellmesh
@@ -167,6 +189,9 @@ namespace Silentor.TB.Server.Maps.Voronoi
                     Id = i,
                     Center = zonesCoords[i],
                     IsClosed = isCellsClosed[i],
+                    Edges = (cellsEdges[i].Select(e => new Cell.Edge(
+                        new Vector2((float)e.x1, (float)e.y1), new Vector2((float)e.x2, (float)e.y2)))).ToArray(),
+                    Vertices = cellsEdges[i].Select(e => new Vector2((float)e.x1, (float)e.y1)).ToArray()
                 };
             }
 
@@ -175,8 +200,6 @@ namespace Silentor.TB.Server.Maps.Voronoi
             {
                 var cell = result[i];
                 var cellEdges = cellsEdges[i];
-                cell.Edges = new List<Cell.Edge>(cellEdges.Select(e => new Cell.Edge(
-                    new Vector2((float)e.x1, (float)e.y1), new Vector2((float)e.x2, (float)e.y2))));
                 cell.Neighbors = cellEdges.Select(e => e.site1 == cell.Id ? result[e.site2] : result[e.site1]).ToArray();
             }
 

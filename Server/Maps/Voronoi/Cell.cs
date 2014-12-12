@@ -22,19 +22,38 @@ namespace Silentor.TB.Server.Maps.Voronoi
         /// <summary>
         /// Clockwise sorted vertices
         /// </summary>
-        public List<Vector2> Vertices;
+        public Vector2[] Vertices;
 
         /// <summary>
         /// Clockwise oriented edges
         /// </summary>
-        public List<Edge> Edges;
+        public Edge[] Edges;
 
         /// <summary>
         /// Clockwise oriented neighbor cells
         /// </summary>
         public Cell[] Neighbors;
 
+        public BoundingBox Bounds;
+
         public bool IsClosed;
+
+        /// <summary>
+        /// Check if position contains in cell
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public bool IsContains(Vector2 position)
+        {
+            foreach (var edge in Edges)
+            {
+                if ((position.Y - edge.Vertex1.Y)*(edge.Vertex2.X - edge.Vertex1.X) -
+                    (position.X - edge.Vertex1.X)*(edge.Vertex2.Y - edge.Vertex1.Y) > 0)
+                    return false;
+            }
+
+            return true;
+        }
 
         public struct Edge
         {
