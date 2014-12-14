@@ -173,7 +173,7 @@ MonoBehaviour:
     ServerPort: 10000
     ApplicationEvents: {fileID: 7509625}
   GameSettings:
-    ChunkViewRadius: 1
+    ChunkViewRadius: 7
     ChunkCacheSize: 30
   VisualizationSettings:
     Blocks: {fileID: 11400000, guid: d52d9388de2ecb348a2117b94ca44cac, type: 2}
@@ -181,7 +181,7 @@ MonoBehaviour:
     EnemyPrefab: {fileID: 11400000, guid: efc64cc3904d6614797777cd200c5277, type: 2}
     MapVisual: {fileID: 11400000, guid: 53e984ef1f464d74f8096d3ec562edb8, type: 2}
   InputSettings:
-    YawSensitivity: 90
+    YawSensitivity: 270
     PitchSensitivity: 90
 --- !u!1 &368728848
 GameObject:
@@ -322,7 +322,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 404347834}
-  m_HideIfInvisible: 0
 --- !u!1 &529011222
 GameObject:
   m_ObjectHideFlags: 0
@@ -559,7 +558,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 797458362}
-  m_HideIfInvisible: 0
 --- !u!224 &797458366
 RectTransform:
   m_ObjectHideFlags: 0
@@ -651,6 +649,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
+  m_DragThreshold: 5
 --- !u!4 &1130781302
 Transform:
   m_ObjectHideFlags: 0
@@ -801,6 +800,7 @@ Canvas:
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
 --- !u!1 &2019233630
@@ -871,7 +871,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2019233630}
-  m_HideIfInvisible: 0
 --- !u!114 &2019233634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -977,4 +976,3 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2083380307}
-  m_HideIfInvisible: 0

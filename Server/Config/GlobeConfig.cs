@@ -1,4 +1,5 @@
-﻿using Silentor.TB.Common.Config;
+﻿using System;
+using Silentor.TB.Common.Config;
 using Silentor.TB.Common.Maps.Geometry;
 
 namespace Silentor.TB.Server.Config
@@ -7,9 +8,8 @@ namespace Silentor.TB.Server.Config
     {
         public GlobeConfig()
         {
-            Seed = 666;
-            Bounds = new Bounds2i(new Vector2i(0, 0), new Vector2i(100, 100));
-
+            Seed = Environment.TickCount;
+            Bounds = new Bounds2i(new Vector2i(0, 0), new Vector2i(50, 50));
         }
 
         public int Seed { get; private set; }

@@ -21,7 +21,11 @@ namespace Silentor.TB.Client.Meshing
         {
             Add(new SimplestBlockMesher(atlas, blockSet[BlockSet.StoneID], "stone"));
             Add(new SimplestBlockMesher(atlas, blockSet[BlockSet.DirtID], "dirt"));
-            Add(new SimplestBlockMesher(atlas, blockSet[BlockSet.DirtWithGrassID], "grass_side"));
+            Add(new SimplestBlockMesher(atlas, blockSet[BlockSet.DirtWithGrassID], "grass_top"));
+            Add(new SimplestBlockMesher(atlas, blockSet[BlockSet.SnowID], "snow"));
+            Add(new SimplestBlockMesher(atlas, blockSet[BlockSet.IceID], "ice"));
+            Add(new SimplestBlockMesher(atlas, blockSet[BlockSet.LavaID], "glowstone"));
+            Add(new SimplestBlockMesher(atlas, blockSet[BlockSet.SandID], "sand"));
             //Add(new SymmetricBlockRenderer(atlas, blockSet[BlockSet.DirtWithGrassID], "grass_side", "grass_top", "dirt"));
             //_renderers[BlockSet.REEDS_ID] = new BlockRenderer(map, BlockSet.Instance[BlockSet.DIRT_WITH_GRASS_ID], "reeds", isTransparent: true);
         }

@@ -65,6 +65,7 @@ namespace Silentor.TB.Client
             Container.Bind<IPlayer>().ToSingle<Player>();
             //_container.Bind<IEnemy>().ToTransient<Enemy>();
             Container.Bind<IEnemyFactory>().ToSingle<EnemyFactory>();
+            Container.Bind<EnemyFactory.Factory>().ToSingle();              //Not so good
         }
     }
 }

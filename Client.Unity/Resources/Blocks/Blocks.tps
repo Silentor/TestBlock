@@ -149,11 +149,67 @@
         <key>fileList</key>
         <array>
             <filename>stone.png</filename>
-            <filename>reeds.png</filename>
             <filename>dirt.png</filename>
             <filename>glass.png</filename>
             <filename>grass_side.png</filename>
             <filename>grass_top.png</filename>
+            <filename>dirt.png</filename>
+            <filename>grass_side.png</filename>
+            <filename>grass_top.png</filename>
+            <filename>ice.png</filename>
+            <filename>sand.png</filename>
+            <filename>snow.png</filename>
+            <filename>stone.png</filename>
+            <filename>dirt.png</filename>
+            <filename>grass_side.png</filename>
+            <filename>grass_top.png</filename>
+            <filename>ice.png</filename>
+            <filename>sand.png</filename>
+            <filename>snow.png</filename>
+            <filename>stone.png</filename>
+            <filename>dirt.png</filename>
+            <filename>grass_side.png</filename>
+            <filename>grass_top.png</filename>
+            <filename>ice.png</filename>
+            <filename>sand.png</filename>
+            <filename>snow.png</filename>
+            <filename>stone.png</filename>
+            <filename>dirt.png</filename>
+            <filename>grass_side.png</filename>
+            <filename>grass_top.png</filename>
+            <filename>ice.png</filename>
+            <filename>sand.png</filename>
+            <filename>snow.png</filename>
+            <filename>stone.png</filename>
+            <filename>dirt.png</filename>
+            <filename>grass_side.png</filename>
+            <filename>grass_top.png</filename>
+            <filename>ice.png</filename>
+            <filename>sand.png</filename>
+            <filename>snow.png</filename>
+            <filename>stone.png</filename>
+            <filename>dirt.png</filename>
+            <filename>grass_side.png</filename>
+            <filename>grass_top.png</filename>
+            <filename>ice.png</filename>
+            <filename>sand.png</filename>
+            <filename>snow.png</filename>
+            <filename>stone.png</filename>
+            <filename>dirt.png</filename>
+            <filename>grass_side.png</filename>
+            <filename>grass_top.png</filename>
+            <filename>ice.png</filename>
+            <filename>sand.png</filename>
+            <filename>snow.png</filename>
+            <filename>stone.png</filename>
+            <filename>dirt.png</filename>
+            <filename>grass_side.png</filename>
+            <filename>grass_top.png</filename>
+            <filename>ice.png</filename>
+            <filename>sand.png</filename>
+            <filename>snow.png</filename>
+            <filename>stone.png</filename>
+            <filename>glowstone.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

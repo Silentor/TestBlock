@@ -8,6 +8,7 @@ namespace Silentor.TB.Client.Players
         public Enemy(ActorConfig config)
             : base(config)
         {
+
         }
     }
 }

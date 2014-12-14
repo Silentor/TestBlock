@@ -21,10 +21,12 @@ namespace Silentor.TB.Server.Maps.Voronoi
         /// <param name="desiredZonesCount">Result zones count can be less</param>
         /// <param name="gridSize">Size of square grid of chunks</param>
         /// <returns></returns>
-        public static Cell[] Generate(int desiredZonesCount, int gridSize)
+        public static Cell[] Generate(int count, int gridSize, int seed, int minDistance = 0)
         {
-            //var points = GenerateZonePoints(desiredZonesCount, gridSize);
-            return null;
+            var points = GeneratePoints(count, gridSize, seed, minDistance);
+            var voronoi = GenerateVoronoi(points, gridSize);
+            var mesh = ProcessVoronoi(points, voronoi);
+            return mesh;
         }
 
         /// <summary>

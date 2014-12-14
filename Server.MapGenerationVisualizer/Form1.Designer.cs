@@ -41,6 +41,8 @@
             this.tbSeed = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.udMinDistance = new System.Windows.Forms.NumericUpDown();
+            this.cbStyle = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udZones)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udGrid)).BeginInit();
@@ -60,8 +62,9 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(739, 531);
@@ -70,7 +73,7 @@
             // 
             // cbZoom
             // 
-            this.cbZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cbZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbZoom.FormattingEnabled = true;
             this.cbZoom.Items.AddRange(new object[] {
             "1",
@@ -89,7 +92,7 @@
             // 
             // udZones
             // 
-            this.udZones.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.udZones.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.udZones.Location = new System.Drawing.Point(757, 82);
             this.udZones.Maximum = new decimal(new int[] {
             1000,
@@ -112,7 +115,7 @@
             // 
             // udGrid
             // 
-            this.udGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.udGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.udGrid.Location = new System.Drawing.Point(757, 145);
             this.udGrid.Maximum = new decimal(new int[] {
             1000,
@@ -135,7 +138,7 @@
             // 
             // label1
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(757, 66);
             this.label1.Name = "label1";
@@ -145,7 +148,7 @@
             // 
             // label2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(757, 129);
             this.label2.Name = "label2";
@@ -155,16 +158,17 @@
             // 
             // label3
             // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(757, 13);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(34, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "Zoom";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // cbIsRandomSeed
             // 
+            this.cbIsRandomSeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cbIsRandomSeed.AutoSize = true;
             this.cbIsRandomSeed.Checked = true;
             this.cbIsRandomSeed.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -177,6 +181,7 @@
             // 
             // label4
             // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(757, 455);
             this.label4.Name = "label4";
@@ -186,6 +191,7 @@
             // 
             // tbSeed
             // 
+            this.tbSeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSeed.Location = new System.Drawing.Point(757, 471);
             this.tbSeed.MaxLength = 10;
             this.tbSeed.Name = "tbSeed";
@@ -197,7 +203,7 @@
             // 
             // label5
             // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(757, 182);
             this.label5.Name = "label5";
@@ -207,7 +213,7 @@
             // 
             // udMinDistance
             // 
-            this.udMinDistance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.udMinDistance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.udMinDistance.Location = new System.Drawing.Point(757, 198);
             this.udMinDistance.Maximum = new decimal(new int[] {
             20,
@@ -223,11 +229,33 @@
             0,
             0});
             // 
+            // cbStyle
+            // 
+            this.cbStyle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbStyle.FormattingEnabled = true;
+            this.cbStyle.Location = new System.Drawing.Point(757, 419);
+            this.cbStyle.Name = "cbStyle";
+            this.cbStyle.Size = new System.Drawing.Size(87, 21);
+            this.cbStyle.TabIndex = 14;
+            this.cbStyle.SelectedIndexChanged += new System.EventHandler(this.cbStyle_SelectedIndexChanged);
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(760, 400);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(30, 13);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Style";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(856, 584);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.cbStyle);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.udMinDistance);
             this.Controls.Add(this.tbSeed);
@@ -243,6 +271,7 @@
             this.Controls.Add(this.btnCreate);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udZones)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udGrid)).EndInit();
@@ -267,6 +296,8 @@
         private System.Windows.Forms.TextBox tbSeed;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown udMinDistance;
+        private System.Windows.Forms.ComboBox cbStyle;
+        private System.Windows.Forms.Label label6;
     }
 }
 
