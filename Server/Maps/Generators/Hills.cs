@@ -1,9 +1,13 @@
-﻿using Silentor.TB.Common.Config;
+﻿using System.Diagnostics;
+using System.Linq;
+using Microsoft.Xna.Framework;
+using Silentor.TB.Common.Config;
 using Silentor.TB.Common.Maps.Blocks;
 using Silentor.TB.Common.Maps.Chunks;
 using Silentor.TB.Common.Maps.Geometry;
 using Silentor.TB.Common.Network.Messages;
 using Silentor.TB.Common.Tools;
+using Silentor.TB.Server.Maps.Voronoi;
 
 namespace Silentor.TB.Server.Maps.Generators
 {
@@ -11,13 +15,37 @@ namespace Silentor.TB.Server.Maps.Generators
     {
         public Hills(IGlobeConfig globe, IBlockSet blockSet) : base(globe)
         {
-            _stone = blockSet[BlockSet.StoneID];
-            _dirt = blockSet[BlockSet.DirtID];
-            //_grass = blockSet[BlockSet.DirtID];
+            _lands = new[]
+            {
+                blockSet[BlockSet.StoneID], blockSet[BlockSet.DirtID], blockSet[BlockSet.DirtWithGrassID],
+                blockSet[BlockSet.SnowID], blockSet[BlockSet.SandID], blockSet[BlockSet.IceID],
+                blockSet[BlockSet.LavaID]
+            };
+
+            _air = blockSet[BlockSet.AirID];
+            //_stone = ;
+            //_dirt = blockSet[BlockSet.DirtID];
+            //_grass = blockSet[BlockSet.DirtWithGrassID];
+
+            var time = Stopwatch.StartNew();
+            _planeMesh = CellMeshGenerator.Generate(globe.Bounds.Size.X, globe.Bounds.Size.X, globe.Seed, 3);
+            time.Stop();
+
+            Log.Trace("Prepared mesh for plane, time: {0} msec", time.ElapsedMilliseconds);
+            
         }
 
         protected override ChunkContents GenerateSync(Vector2i position)
         {
+            var chunkCenterPos = new Vector2(position.X*16 + 8, position.Z*16 + 8);
+            var cell = _planeMesh.First(c => c.IsContains(chunkCenterPos));
+
+            Block fillBlock;
+            if (cell != null && cell.IsClosed)
+                fillBlock = _lands[cell.Id % _lands.Length];
+            else
+                fillBlock = _air;
+
             var heightmap = new byte[Chunk.SizeX*Chunk.SizeZ];
             var blocks = new BlockData[Chunk.BlocksCount];
             var result = new ChunkContents(position, blocks, heightmap);
@@ -39,7 +67,7 @@ namespace Silentor.TB.Server.Maps.Generators
 
                     heightmap[x * Chunk.SizeX + z] = (byte)height;
                     for (var y = 0; y <= height; y++)
-                        result.SetBlockData(x, y, z, new BlockData(_dirt));
+                        result.SetBlockData(x, y, z, new BlockData(fillBlock));
                 }
             }
 
@@ -49,5 +77,8 @@ namespace Silentor.TB.Server.Maps.Generators
         private readonly Block _stone;
         private readonly Block _grass;
         private readonly Block _dirt;
+        private Cell[] _planeMesh;
+        private Block[] _lands;
+        private Block _air;
     }
 }

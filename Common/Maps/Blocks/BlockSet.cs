@@ -29,6 +29,10 @@ namespace Silentor.TB.Common.Maps.Blocks
         public const byte DirtWithGrassID = OpaqueStartIndex + 1;
         public const byte DirtID = OpaqueStartIndex + 2;
         public const byte BedrockID = OpaqueStartIndex + 3;
+        public const byte IceID = OpaqueStartIndex + 4;
+        public const byte SandID = OpaqueStartIndex + 5;
+        public const byte SnowID = OpaqueStartIndex + 6;
+        public const byte LavaID = OpaqueStartIndex + 7;
 
 
         public const byte EmptyID = AirID;
@@ -43,8 +47,12 @@ namespace Silentor.TB.Common.Maps.Blocks
             AddBlock(new Block(StoneID));
             AddBlock(new Block(DirtID));
             AddBlock(new Block(GlassID));
-            AddBlock(new Block(ReedsID));
+            //AddBlock(new Block(ReedsID));
             AddBlock(new Block(DirtWithGrassID));
+            AddBlock(new Block(SnowID));
+            AddBlock(new Block(IceID));
+            AddBlock(new Block(SandID));
+            AddBlock(new Block(LavaID));
 
             Log.Info("Added {0} blocks", _blocks.Count(b => b != null));
         }

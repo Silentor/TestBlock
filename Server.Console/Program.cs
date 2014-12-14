@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using NLog;
 using Silentor.TB.Common.Network;
 
-namespace Silentor.TB.Server
+namespace Silentor.TB.Server.Console
 {
     class Program
     {
@@ -18,7 +17,7 @@ namespace Silentor.TB.Server
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledException_Handler;
 
-            Console.WriteLine("Starting server...");
+            System.Console.WriteLine("Starting server...");
 
             var config = new Bootloader.Config()
             {
@@ -32,17 +31,17 @@ namespace Silentor.TB.Server
 
             bootloader.Start();
 
-            Console.WriteLine("...server started");
+            System.Console.WriteLine("...server started");
 
             while (true)
             {
-                if (Console.KeyAvailable)
-                    if (Console.ReadKey().Key == ConsoleKey.Escape)
+                if (System.Console.KeyAvailable)
+                    if (System.Console.ReadKey().Key == ConsoleKey.Escape)
                     {
                         bootloader.Stop();
                         Thread.Sleep(1000);
                     }
-                    else if (Console.ReadKey().Key == ConsoleKey.P)
+                    else if (System.Console.ReadKey().Key == ConsoleKey.P)
                         if (bootloader.IsPaused)
                             bootloader.Resume();
                         else
@@ -53,7 +52,7 @@ namespace Silentor.TB.Server
 
         private static void UnhandledException_Handler(object sender, UnhandledExceptionEventArgs e)
         {
-            Console.WriteLine(e);
+            System.Console.WriteLine(e);
             Log.Fatal("Unhandled exception {0}", e);
         }
         

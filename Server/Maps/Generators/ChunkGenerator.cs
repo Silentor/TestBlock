@@ -50,14 +50,13 @@ namespace Silentor.TB.Server.Maps.Generators
         private readonly BufferBlock<GenerateChunkMessage> _buffer = new BufferBlock<GenerateChunkMessage>();
         #endregion
 
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        protected static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         private struct GenerateChunkMessage
         {
             public Vector2i Position;
             public TaskCompletionSource<ChunkContents> Result;
         }
-
 
     }
 }

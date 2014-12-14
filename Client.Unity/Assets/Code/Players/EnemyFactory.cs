@@ -6,12 +6,12 @@ namespace Silentor.TB.Client.Players
     public class EnemyFactory : IEnemyFactory
     {
         private readonly DiContainer _container;
-        private readonly Factory<Enemy> _factory;
+        private readonly Factory _factory;
 
-        public EnemyFactory(DiContainer container)
+        public EnemyFactory(DiContainer container, Factory factory)
         {
             _container = container;
-            _factory = new Factory<Enemy>();
+            _factory = factory;
         }
 
         public IActorEditor Create(ActorConfig config)
@@ -22,5 +22,8 @@ namespace Silentor.TB.Client.Players
                 return _factory.Create();
             }            
         }
+
+        public class Factory : Factory<Enemy>
+        { }
     }
 }
